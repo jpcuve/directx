@@ -39,10 +39,12 @@ add_executable(${PROJECT_NAME} WIN32
         helper.h
         targetver.h
         framework.h
-        Application.cpp
-        Application.h
+        debug.h
+        debug.cpp
         directx.cpp
         directx.h
+        Application.cpp
+        Application.h
         DeviceResources.cpp
         DeviceResources.h
         Renderer.cpp

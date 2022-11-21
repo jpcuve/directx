@@ -1,7 +1,9 @@
 #include "directx.h"
 #include "Application.h"
+#include "debug.h"
 
 Application application;
+DebugStream dbg;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -9,6 +11,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
+    dbg << "Starting directx demo" << std::endl << std::flush;
     application.Init(hInstance, nCmdShow);
     int retVal = application.Run();
     application.Done(hInstance);

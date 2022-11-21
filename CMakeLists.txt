@@ -49,6 +49,8 @@ add_executable(${PROJECT_NAME} WIN32
         DeviceResources.h
         Renderer.cpp
         Renderer.h
+        Timer.cpp
+        Timer.h
         )
 add_dependencies(${PROJECT_NAME} shaders)
 

@@ -3,7 +3,7 @@ project(directx)
 
 set(CMAKE_CXX_STANDARD 20)
 
-include_directories(.)
+include_directories(./src)
 
 set (WINDOWS_KIT "C:/Program Files (x86)/Windows Kits/10")
 set (WINDOWS_VERSION 10.0.22000.0)
@@ -17,9 +17,9 @@ link_libraries(D3D11 DXGI)
 
 # Build HLSL shaders
 add_custom_target(shaders)
-set(HLSL_SHADER_FILES CubeVertexShader.hlsl CubePixelShader.hlsl)
-set_source_files_properties(CubeVertexShader.hlsl PROPERTIES ShaderType "vs")
-set_source_files_properties(CubePixelShader.hlsl PROPERTIES ShaderType "ps")
+set(HLSL_SHADER_FILES src/CubeVertexShader.hlsl src/CubePixelShader.hlsl)
+set_source_files_properties(src/CubeVertexShader.hlsl PROPERTIES ShaderType "vs")
+set_source_files_properties(src/CubePixelShader.hlsl PROPERTIES ShaderType "ps")
 set_source_files_properties(${HLSL_SHADER_FILES} PROPERTIES ShaderModel "4_0_level_9_3")
 foreach(FILE ${HLSL_SHADER_FILES})
     get_filename_component(FILE_WE ${FILE} NAME_WE)
@@ -36,22 +36,23 @@ foreach(FILE ${HLSL_SHADER_FILES})
 endforeach(FILE)
 
 add_executable(${PROJECT_NAME} WIN32
-        helper.h
-        targetver.h
-        framework.h
-        debug.h
-        debug.cpp
-        directx.cpp
-        directx.h
-        Application.cpp
-        Application.h
-        DeviceResources.cpp
-        DeviceResources.h
-        Renderer.cpp
-        Renderer.h
-        Timer.cpp
-        Timer.h
+        src/helper.h
+        src/targetver.h
+        src/framework.h
+        src/debug.h
+        src/debug.cpp
+        src/directx.cpp
+        src/directx.h
+        src/Application.cpp
+        src/Application.h
+        src/DeviceResources.cpp
+        src/DeviceResources.h
+        src/Renderer.cpp
+        src/Renderer.h
+        src/Timer.cpp
+        src/Timer.h
         )
 add_dependencies(${PROJECT_NAME} shaders)
+target_precompile_headers(${PROJECT_NAME} PRIVATE src/stdafx.h)
 
 

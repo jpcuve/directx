@@ -7,10 +7,10 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 class Application {
 private:
-	LPCWSTR m_windowClassName = L"DirectXWindowClassName";
-	LPCWSTR m_windowTitle = L"DirectX";
-	int m_windowWidth = 1280;
-	int m_windowHeight = 1024;
+	LPCWSTR m_windowClassName {L"DirectXWindowClassName"};
+	LPCWSTR m_windowTitle {L"DirectX"};
+	int m_windowWidth {1280};
+	int m_windowHeight {1024};
 	DeviceResources m_deviceResources;
 	Renderer m_renderer{ m_deviceResources };
 public:

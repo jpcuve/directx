@@ -1,6 +1,6 @@
 struct PS_INPUT
 {
-	float4 Position : SV_POSITION; // interpolated vertex position (system value)
+	float4 Position : SV_POSITION; // interpolated vertex m_position (system value)
 	float4 Color    : COLOR0;      // interpolated diffuse color
 };
 

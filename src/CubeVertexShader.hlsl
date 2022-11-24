@@ -23,7 +23,7 @@ VS_OUTPUT main(VS_INPUT input)
 
 	float4 pos = float4(input.vPos, 1.0f);
 
-	// Transform the position from object space to homogeneous projection space
+	// Transform the m_position from object space to homogeneous projection space
 	pos = mul(pos, mWorld);
 	pos = mul(pos, View);
 	pos = mul(pos, Projection);

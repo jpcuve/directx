@@ -51,7 +51,7 @@ add_executable(${PROJECT_NAME} WIN32
         src/Renderer.h
         src/Timer.cpp
         src/Timer.h
-        )
+        src/StanfordParser.cpp src/StanfordParser.h)
 add_dependencies(${PROJECT_NAME} shaders)
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/stdafx.h)
 

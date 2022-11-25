@@ -3,6 +3,7 @@
 //
 
 #include "StanfordParser.h"
+#include "helper.h"
 #include <iostream>
 
 size_t StanfordParser::NextNewline() {
@@ -37,15 +38,21 @@ size_t StanfordParser::NextCount(size_t byteCount, bool bigEndian) {
     return count;
 }
 
-void StanfordParser::Parse(StanfordHandler& handler) {
+void StanfordParser::Parse() {
     while (true){
         if (m_inData){
             break;
         } else {
             auto i = NextNewline();
-            auto line = std::string(reinterpret_cast<const char *>(m_data[m_position]), i);
+            auto line = std::string_view(reinterpret_cast<const char *>(&m_data[m_position]), i - m_position);
+            auto bracket = line.find_first_of('{', 0);
+            if (bracket != std::string::npos){
+                line = std::string_view(reinterpret_cast<const char *>(&m_data[m_position]), bracket);
+            }
             std::cout << line << std::endl;
             m_inData = line == "end_header";
+            auto tokens = split(line, ' ');
+            m_position = i + 1;
         }
     }
 }

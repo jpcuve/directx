@@ -43,7 +43,20 @@ size_t StanfordParser::NextCount(size_t byteCount, bool bigEndian) {
 void StanfordParser::Parse(StanfordHandler& handler) {
     while (true){
         if (m_inData){
-            break;
+            if (m_descriptorIndex > m_descriptors.size() - 1){
+                break;
+            }
+            auto descriptor = m_descriptors[m_descriptorIndex];
+            if (descriptor.count == 0){ // fixed
+                handler.DataFixed(descriptor.name, 0);
+            } else { // variable
+                handler.DataVariable(descriptor.name, m_elementIndex, 0);
+            }
+            m_elementIndex++;
+            if (m_elementIndex == descriptor.count){
+                m_descriptorIndex++;
+                m_elementIndex = 0;
+            }
         } else {
             auto i = NextNewline();
             auto line = std::string_view(reinterpret_cast<const char *>(&m_data[m_position]), i - m_position);
@@ -74,7 +87,21 @@ void StanfordParser::Parse(StanfordHandler& handler) {
                     });
                     handler.Element(tokens[1], count);
                 } else if (tokens[0] == "property"){
-
+                    if (m_descriptors.empty() || tokens.size() < 2){
+                        throw parse_exception();
+                    }
+                    auto descriptor = m_descriptors[m_descriptors.size() - 1];
+                    if (tokens[1] == "list"){
+                        if (tokens.size() < 4){
+                            throw parse_exception();
+                        }
+                        std::from_chars(tokens[2].data(), tokens[2].data() + tokens[2].size(), descriptor.count);
+                        std::from_chars(tokens[3].data(), tokens[3].data() + tokens[3].size(), descriptor.length);
+                        handler.PropertyList(tokens[2], tokens[3], tokens[4]);
+                    } else {
+                        std::from_chars(tokens[1].data(), tokens[1].data() + tokens[1].size(), descriptor.length);
+                        handler.Property(tokens[1], tokens[2]);
+                    }
                 } else if (tokens[0] == "end_header"){
                     m_inData = true;
                 } else {

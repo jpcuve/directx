@@ -6,6 +6,7 @@
 
 struct Descriptor {
     std::string_view& name;
+    int length = 0;
     int count = 0;
 };
 

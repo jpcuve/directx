@@ -15,9 +15,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
     dbg << "Starting directx demo" << std::endl << std::flush;
     std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/house.ply");
+    auto handler = DefaultStanfordHandler{};
     StanfordParser parser(data);
-    parser.Parse();
-
+    parser.Parse(handler);
     application.Init(hInstance, nCmdShow);
     int retVal = application.Run();
     application.Done(hInstance);

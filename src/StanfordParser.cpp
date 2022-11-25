@@ -5,6 +5,8 @@
 #include "StanfordParser.h"
 #include "helper.h"
 #include <iostream>
+#include <cstdlib>
+#include <charconv>
 
 size_t StanfordParser::NextNewline() {
     auto i = m_position;
@@ -38,7 +40,7 @@ size_t StanfordParser::NextCount(size_t byteCount, bool bigEndian) {
     return count;
 }
 
-void StanfordParser::Parse() {
+void StanfordParser::Parse(StanfordHandler& handler) {
     while (true){
         if (m_inData){
             break;
@@ -49,10 +51,64 @@ void StanfordParser::Parse() {
             if (bracket != std::string::npos){
                 line = std::string_view(reinterpret_cast<const char *>(&m_data[m_position]), bracket);
             }
-            std::cout << line << std::endl;
-            m_inData = line == "end_header";
             auto tokens = split(line, ' ');
+            if (tokens.empty()){
+                throw parse_exception();
+            } else {
+                if (tokens[0] == "ply"){
+                    handler.Ply();
+                } else if (tokens[0] == "format"){
+                    if (tokens.size() < 3){
+                        throw parse_exception();
+                    }
+                    handler.Format(tokens[1], tokens[2]);
+                } else if (tokens[0] == "element"){
+                    if (tokens.size() < 3){
+                        throw parse_exception();
+                    }
+                    int count;
+                    std::from_chars(tokens[2].data(), tokens[2].data() + tokens[2].size(), count);
+                    m_descriptors.push_back(Descriptor{
+                        .name = tokens[1],
+                        .count = count,
+                    });
+                    handler.Element(tokens[1], count);
+                } else if (tokens[0] == "property"){
+
+                } else if (tokens[0] == "end_header"){
+                    m_inData = true;
+                } else {
+                    throw parse_exception();
+                }
+            }
             m_position = i + 1;
         }
     }
+}
+
+void DefaultStanfordHandler::Invalid() {
+}
+
+void DefaultStanfordHandler::Ply() {
+}
+
+void DefaultStanfordHandler::Format(std::string_view &form, std::string_view &version) {
+}
+
+void DefaultStanfordHandler::Element(std::string_view &name, int count) {
+}
+
+void DefaultStanfordHandler::Property(std::string_view &dataType, std::string_view &name) {
+}
+
+void DefaultStanfordHandler::PropertyList(std::string_view &countType, std::string_view &dataType, std::string_view &name) {
+}
+
+void DefaultStanfordHandler::EndHeader() {
+}
+
+void DefaultStanfordHandler::DataFixed(std::string_view &name, size_t index) {
+}
+
+void DefaultStanfordHandler::DataVariable(std::string_view &name, size_t index, size_t count) {
 }

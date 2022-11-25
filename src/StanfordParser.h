@@ -5,9 +5,10 @@
 #include <exception>
 
 struct Descriptor {
-    std::string_view& name;
-    int length = 0;
+    std::string name;
     int count = 0;
+    size_t dataSize = 0;
+    size_t countSize = 0;
 };
 
 class parse_exception: std::exception{};
@@ -21,8 +22,8 @@ public:
     virtual void Property(std::string_view& dataType, std::string_view& name) = 0;
     virtual void PropertyList(std::string_view& countType, std::string_view& dataType, std::string_view& name) = 0;
     virtual void EndHeader() = 0;
-    virtual void DataFixed(std::string_view& name, size_t index) = 0;
-    virtual void DataVariable(std::string_view& name, size_t index, size_t count) = 0;
+    virtual void DataFixed(std::string& name, size_t index) = 0;
+    virtual void DataVariable(std::string& name, size_t index, size_t count) = 0;
 };
 
 class DefaultStanfordHandler: public StanfordHandler {
@@ -40,9 +41,9 @@ class DefaultStanfordHandler: public StanfordHandler {
 
     void EndHeader() override;
 
-    void DataFixed(std::string_view &name, size_t index) override;
+    void DataFixed(std::string &name, size_t index) override;
 
-    void DataVariable(std::string_view &name, size_t index, size_t count) override;
+    void DataVariable(std::string &name, size_t index, size_t count) override;
 };
 
 class StanfordParser {

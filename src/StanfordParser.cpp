@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <charconv>
+#include <map>
 
 size_t StanfordParser::NextNewline() {
     auto i = m_position;
@@ -40,14 +41,29 @@ size_t StanfordParser::NextCount(size_t byteCount, bool bigEndian) {
     return count;
 }
 
+std::map<std::string_view, size_t> DATA_SIZES {
+        {"char", 1},
+        {"uint8", 1},
+        {"uchar", 1},
+        {"short", 2},
+        {"ushort", 2},
+        {"int", 4},
+        {"uint", 4},
+        {"int32", 4},
+        {"uint32", 4},
+        {"float", 4},
+        {"float32", 4},
+        {"double", 8},
+};
+
 void StanfordParser::Parse(StanfordHandler& handler) {
     while (true){
         if (m_inData){
             if (m_descriptorIndex > m_descriptors.size() - 1){
                 break;
             }
-            auto descriptor = m_descriptors[m_descriptorIndex];
-            if (descriptor.count == 0){ // fixed
+            auto descriptor = m_descriptors.at(m_descriptorIndex);
+            if (descriptor.countSize == 0){ // fixed
                 handler.DataFixed(descriptor.name, 0);
             } else { // variable
                 handler.DataVariable(descriptor.name, m_elementIndex, 0);
@@ -82,28 +98,31 @@ void StanfordParser::Parse(StanfordHandler& handler) {
                     int count;
                     std::from_chars(tokens[2].data(), tokens[2].data() + tokens[2].size(), count);
                     m_descriptors.push_back(Descriptor{
-                        .name {tokens[1]},
+                        .name {std::string(tokens[1])},
                         .count = count,
+                        .dataSize = 0,
+                        .countSize = 0,
                     });
                     handler.Element(tokens[1], count);
                 } else if (tokens[0] == "property"){
                     if (m_descriptors.empty() || tokens.size() < 2){
                         throw parse_exception();
                     }
-                    auto descriptor = m_descriptors[m_descriptors.size() - 1];
+                    auto descriptor = &m_descriptors[m_descriptors.size() - 1];
                     if (tokens[1] == "list"){
                         if (tokens.size() < 4){
                             throw parse_exception();
                         }
-                        std::from_chars(tokens[2].data(), tokens[2].data() + tokens[2].size(), descriptor.count);
-                        std::from_chars(tokens[3].data(), tokens[3].data() + tokens[3].size(), descriptor.length);
+                        descriptor->countSize = DATA_SIZES[tokens[2]];
+                        descriptor->dataSize = DATA_SIZES[tokens[3]];
                         handler.PropertyList(tokens[2], tokens[3], tokens[4]);
                     } else {
-                        std::from_chars(tokens[1].data(), tokens[1].data() + tokens[1].size(), descriptor.length);
+                        descriptor->dataSize += DATA_SIZES[tokens[1]];
                         handler.Property(tokens[1], tokens[2]);
                     }
                 } else if (tokens[0] == "end_header"){
                     m_inData = true;
+                    handler.EndHeader();
                 } else {
                     throw parse_exception();
                 }
@@ -114,28 +133,35 @@ void StanfordParser::Parse(StanfordHandler& handler) {
 }
 
 void DefaultStanfordHandler::Invalid() {
+    std::cout << "invalid" << std::endl;
 }
 
 void DefaultStanfordHandler::Ply() {
+    std::cout << "ply" << std::endl;
 }
 
 void DefaultStanfordHandler::Format(std::string_view &form, std::string_view &version) {
+    std::cout << "format " << form << " " << version << std::endl;
 }
 
 void DefaultStanfordHandler::Element(std::string_view &name, int count) {
+    std::cout << "element " << name << " " << count << std::endl;
 }
 
 void DefaultStanfordHandler::Property(std::string_view &dataType, std::string_view &name) {
+    std::cout << "property " << dataType << " " << name << std::endl;
 }
 
 void DefaultStanfordHandler::PropertyList(std::string_view &countType, std::string_view &dataType, std::string_view &name) {
+    std::cout << "property list " << countType << " " << dataType << " " << name << std::endl;
 }
 
 void DefaultStanfordHandler::EndHeader() {
+    std::cout << "end_header" << std::endl;
 }
 
-void DefaultStanfordHandler::DataFixed(std::string_view &name, size_t index) {
+void DefaultStanfordHandler::DataFixed(std::string &name, size_t index) {
 }
 
-void DefaultStanfordHandler::DataVariable(std::string_view &name, size_t index, size_t count) {
+void DefaultStanfordHandler::DataVariable(std::string &name, size_t index, size_t count) {
 }

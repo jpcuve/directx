@@ -69,7 +69,7 @@ void StanfordParser::Parse(StanfordHandler& handler) {
                     int count;
                     std::from_chars(tokens[2].data(), tokens[2].data() + tokens[2].size(), count);
                     m_descriptors.push_back(Descriptor{
-                        .name = tokens[1],
+                        .name {tokens[1]},
                         .count = count,
                     });
                     handler.Element(tokens[1], count);

@@ -28,11 +28,11 @@ size_t StanfordParser::NextNewline() {
     throw parse_exception();
 }
 
-size_t StanfordParser::NextCount(size_t byteCount, bool bigEndian) {
+size_t StanfordParser::NextCount(size_t byteCount) {
     size_t count = 0;
     for (size_t i = 0; i < byteCount; i++){
         auto next = static_cast<size_t>(m_data[m_position + i]);
-        if (bigEndian){
+        if (m_binaryBigEndian){
             count = (count << 8) + next;
         } else {
             count += next << (8 * i);
@@ -67,7 +67,7 @@ void StanfordParser::Parse(StanfordHandler& handler) {
                 m_position += descriptor.dataSize;
                 handler.DataFixed(descriptor.name, m_elementIndex, m_position - descriptor.dataSize, m_position);
             } else { // variable
-                auto count = NextCount(descriptor.countSize, false); // assuming little endian
+                auto count = NextCount(descriptor.countSize);
                 m_position += descriptor.countSize;
                 auto totalLength = count * descriptor.dataSize;
                 m_position += totalLength;
@@ -95,6 +95,7 @@ void StanfordParser::Parse(StanfordHandler& handler) {
                     if (tokens.size() < 3){
                         throw parse_exception();
                     }
+                    m_binaryBigEndian = tokens[2] != "binary_little_endian";
                     handler.Format(tokens[1], tokens[2]);
                 } else if (tokens[0] == "element"){
                     if (tokens.size() < 3){

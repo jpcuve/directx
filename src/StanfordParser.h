@@ -46,9 +46,10 @@ private:
     const std::vector<byte>& m_data;
     size_t m_position = 0;
     bool m_inData = false;
+    bool m_binaryBigEndian = false;
     std::vector<Descriptor> m_descriptors = {};
     size_t m_descriptorIndex = 0;
     size_t m_elementIndex = 0;
     size_t NextNewline();
-    size_t NextCount(size_t byteCount, bool bigEndian);
+    size_t NextCount(size_t byteCount);
 };

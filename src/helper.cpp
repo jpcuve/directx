@@ -1,7 +1,8 @@
 #include "helper.h"
 #include <fstream>
 
-void loadBinaryFile(const std::string& fileName, std::vector<byte>& buffer) {
+std::vector<byte> loadBinaryFile(const std::string& fileName) {
+    std::vector<byte> buffer {};
     std::fstream f{fileName, std::ios::in|std::ios::binary};
     constexpr std::streamsize count = 32768;
     auto pBuf = std::unique_ptr<byte[]>(new byte[count]);
@@ -14,6 +15,7 @@ void loadBinaryFile(const std::string& fileName, std::vector<byte>& buffer) {
             }
         }
         f.close();
+        return buffer;
     }
     else {
         throw std::runtime_error("File not found");

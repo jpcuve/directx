@@ -4,11 +4,10 @@
 
 void Renderer::InitShaders() {
     auto device = m_deviceResources.GetDevice();
-    std::vector<byte> shaderData;
-    loadBinaryFile("CubeVertexShader.cso", shaderData);
+    auto vertexShaderData = loadBinaryFile("CubeVertexShader.cso");
     THROW_IF_FAILED(device->CreateVertexShader(
-        shaderData.data(), 
-        shaderData.size(), 
+            vertexShaderData.data(),
+            vertexShaderData.size(),
         nullptr, 
         &m_pVertexShader));
     D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = { {
@@ -30,15 +29,14 @@ void Renderer::InitShaders() {
     } };
     THROW_IF_FAILED(device->CreateInputLayout(
         inputElementDesc, 
-        ARRAYSIZE(inputElementDesc), 
-        shaderData.data(), 
-        shaderData.size(), 
+        ARRAYSIZE(inputElementDesc),
+        vertexShaderData.data(),
+        vertexShaderData.size(),
         &m_pInputLayout));
-    shaderData.resize(0);
-    loadBinaryFile("CubePixelShader.cso", shaderData);
+    auto pixelShaderData = loadBinaryFile("CubePixelShader.cso");
     THROW_IF_FAILED(device->CreatePixelShader(
-        shaderData.data(),
-        shaderData.size(),
+        pixelShaderData.data(),
+        pixelShaderData.size(),
         nullptr,
         &m_pPixelShader));
 }

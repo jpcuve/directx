@@ -14,8 +14,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
     dbg << "Starting directx demo" << std::endl << std::flush;
-    std::vector<byte> data;
-    loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/house.ply", data);
+    std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/house.ply");
     StanfordParser parser(data);
     parser.Parse();
 

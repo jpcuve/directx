@@ -108,16 +108,16 @@ void StanfordParser::Parse(StanfordHandler& handler) {
                     if (m_descriptors.empty() || tokens.size() < 2){
                         throw parse_exception();
                     }
-                    auto descriptor = &m_descriptors[m_descriptors.size() - 1];
+                    auto& descriptor = m_descriptors[m_descriptors.size() - 1];
                     if (tokens[1] == "list"){
                         if (tokens.size() < 4){
                             throw parse_exception();
                         }
-                        descriptor->countSize = DATA_SIZES[tokens[2]];
-                        descriptor->dataSize = DATA_SIZES[tokens[3]];
+                        descriptor.countSize = DATA_SIZES[tokens[2]];
+                        descriptor.dataSize = DATA_SIZES[tokens[3]];
                         handler.PropertyList(tokens[2], tokens[3], tokens[4]);
                     } else {
-                        descriptor->dataSize += DATA_SIZES[tokens[1]];
+                        descriptor.dataSize += DATA_SIZES[tokens[1]];
                         handler.Property(tokens[1], tokens[2]);
                     }
                 } else if (tokens[0] == "end_header"){

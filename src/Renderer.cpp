@@ -45,6 +45,7 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a cube
     auto device = m_deviceResources.GetDevice();
 
+/*
     VertexPositionColor vertices[] = {
             {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
             {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
@@ -83,10 +84,14 @@ void Renderer::InitBuffers() {  // a cube
             {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
             {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
     };
-    m_vertexCount = ARRAYSIZE(vertices);
-    CD3D11_BUFFER_DESC verticesDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
+*/
+    auto cube {Mesh::cube()};
+    auto vertices = cube.GetVertices();
+
+    m_vertexCount = vertices.size();
+    CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
-        .pSysMem = &vertices,
+        .pSysMem = vertices.data(),
         .SysMemPitch = 0,
         .SysMemSlicePitch = 0,
     };

@@ -30,6 +30,7 @@ private:
     ComPtr<ID3D11Buffer> m_pConstantBuffer;
     UINT m_frameCount = 0;
     size_t m_indexCount = 0;
+    size_t m_vertexCount = 0;
     ConstantData m_constantData{};
 };
 

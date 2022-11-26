@@ -45,6 +45,7 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a cube
     auto device = m_deviceResources.GetDevice();
 
+/*
     VertexPositionColor cubeVertices[] = {
         {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
         {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
@@ -56,14 +57,56 @@ void Renderer::InitBuffers() {  // a cube
         {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
         {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
     };
-    CD3D11_BUFFER_DESC verticesDesc(sizeof(cubeVertices), D3D11_BIND_VERTEX_BUFFER);
+*/
+
+    VertexPositionColor vertices[] = {
+            {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), {0x00, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f,-0.5f), {0xFF, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f,-0.5f), {0xFF, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), {0x00, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f,-0.5f), {0xFF, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), {0x00, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
+    };
+    m_vertexCount = ARRAYSIZE(vertices);
+    CD3D11_BUFFER_DESC verticesDesc(sizeof(vertices), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
-        .pSysMem = &cubeVertices,
+        .pSysMem = &vertices,
         .SysMemPitch = 0,
         .SysMemSlicePitch = 0,
     };
     THROW_IF_FAILED(device->CreateBuffer(&verticesDesc, &verticesData, &m_pVertexBuffer));
     
+/*
     unsigned short cubeIndices[] = {
         0,2,1, // -x
         1,2,3,
@@ -91,7 +134,8 @@ void Renderer::InitBuffers() {  // a cube
         .SysMemSlicePitch = 0
     };
     THROW_IF_FAILED(device->CreateBuffer(&indicesDesc, &indicesData, &m_pIndexBuffer));
-    
+*/
+
     CD3D11_BUFFER_DESC constantDesc(
         sizeof(ConstantData),
         D3D11_BIND_CONSTANT_BUFFER
@@ -150,7 +194,7 @@ void Renderer::Render() {
     // OM stage
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
-    deviceContext->DrawIndexed(m_indexCount, 0, 0);
+    deviceContext->Draw(m_vertexCount, 0);
 }
 
 

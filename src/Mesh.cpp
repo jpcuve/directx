@@ -4,7 +4,7 @@
 
 #include "Mesh.h"
 
-std::vector<VertexPositionColor> Mesh::GetBuffer() {
+std::vector<VertexPositionColor> Mesh::GetVertices() {
     std::vector<VertexPositionColor> buffer;
     for (auto& triangle: m_triangles){
         for (auto& index: triangle.indices){

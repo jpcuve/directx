@@ -21,11 +21,6 @@ private:
         DirectX::XMFLOAT4X4 projection;
     } ConstantData;
 
-    typedef struct {
-        DirectX::XMFLOAT3 position;
-        unsigned char color[4];
-    } VertexPositionColor;
-    
     DeviceResources& m_deviceResources;
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
     ComPtr<ID3D11Buffer> m_pIndexBuffer;

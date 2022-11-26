@@ -16,7 +16,7 @@ struct Triangle {
 class Mesh {
 public:
     Mesh(std::vector<VertexPositionColor> vertices, std::vector<Triangle> triangles):m_vertices{std::move(vertices)}, m_triangles{std::move(triangles)}{};
-    std::vector<VertexPositionColor> GetBuffer();
+    std::vector<VertexPositionColor> GetVertices();
     static Mesh ship();
     static Mesh cube();
 private:

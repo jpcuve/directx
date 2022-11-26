@@ -23,7 +23,6 @@ private:
 
     DeviceResources& m_deviceResources;
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
-    ComPtr<ID3D11Buffer> m_pIndexBuffer;
     ComPtr<ID3D11VertexShader> m_pVertexShader;
     ComPtr<ID3D11InputLayout> m_pInputLayout;
     ComPtr<ID3D11PixelShader> m_pPixelShader;

@@ -100,19 +100,18 @@ void Renderer::Render() {
     D3D11_VIDEO_COLOR_RGBA color{ 0.071f, 0.04f, blue, 1.0f };
     deviceContext->ClearRenderTargetView(renderTargetView, reinterpret_cast<float*>(&color));
     deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-    // IA stage
+    // Input Assembly stage
     UINT stride = sizeof(VertexPositionColor);
     UINT offset = 0;
     deviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
     deviceContext->IASetInputLayout(m_pInputLayout.Get());
-    deviceContext->IASetIndexBuffer(m_pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     // Vertex Shader stage
     deviceContext->VSSetShader(m_pVertexShader.Get(), nullptr, 0);
     deviceContext->VSSetConstantBuffers(0, 1, m_pConstantBuffer.GetAddressOf());
     // Pixel Shader stage
     deviceContext->PSSetShader(m_pPixelShader.Get(), nullptr, 0);
-    // OM stage
+    // Output Merge stage
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
     deviceContext->Draw(m_vertexCount, 0);

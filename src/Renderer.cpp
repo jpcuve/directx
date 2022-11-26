@@ -45,20 +45,6 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a cube
     auto device = m_deviceResources.GetDevice();
 
-/*
-    VertexPositionColor cubeVertices[] = {
-        {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
-        {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
-        {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
-        {DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), {0x00, 0xFF, 0xFF, 0xFF}},
-
-        {DirectX::XMFLOAT3(0.5f,-0.5f,-0.5f), {0xFF, 0x00, 0x00, 0xFF}},
-        {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
-        {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
-        {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
-    };
-*/
-
     VertexPositionColor vertices[] = {
             {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
             {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
@@ -106,36 +92,6 @@ void Renderer::InitBuffers() {  // a cube
     };
     THROW_IF_FAILED(device->CreateBuffer(&verticesDesc, &verticesData, &m_pVertexBuffer));
     
-/*
-    unsigned short cubeIndices[] = {
-        0,2,1, // -x
-        1,2,3,
-
-        4,5,6, // +x
-        5,7,6,
-
-        0,1,5, // -y
-        0,5,4,
-
-        2,6,7, // +y
-        2,7,3,
-
-        0,4,6, // -z
-        0,6,2,
-
-        1,3,7, // +z
-        1,7,5,
-    };
-    m_indexCount = ARRAYSIZE(cubeIndices);
-    CD3D11_BUFFER_DESC indicesDesc(sizeof(cubeIndices), D3D11_BIND_INDEX_BUFFER);
-    D3D11_SUBRESOURCE_DATA indicesData{
-        .pSysMem = &cubeIndices,
-        .SysMemPitch = 0,
-        .SysMemSlicePitch = 0
-    };
-    THROW_IF_FAILED(device->CreateBuffer(&indicesDesc, &indicesData, &m_pIndexBuffer));
-*/
-
     CD3D11_BUFFER_DESC constantDesc(
         sizeof(ConstantData),
         D3D11_BIND_CONSTANT_BUFFER

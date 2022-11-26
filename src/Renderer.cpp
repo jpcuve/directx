@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include <vector>
 #include "helper.h"
+#include "Mesh.h"
 
 void Renderer::InitShaders() {
     auto device = m_deviceResources.GetDevice();
@@ -43,6 +44,9 @@ void Renderer::InitShaders() {
 
 void Renderer::InitBuffers() {  // a cube
     auto device = m_deviceResources.GetDevice();
+    auto cube {Mesh::cube()};
+    auto buffer = cube.GetBuffer();
+
     VertexPositionColor cubeVertices[] = {
         {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
         {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
@@ -103,7 +107,7 @@ void Renderer::InitDeviceDependent() {
 }
 
 void Renderer::InitWindowSizeDependent(){
-    auto eye = DirectX::XMVectorSet(0.0f, 0.7f, 1.5f, 0.f);
+    auto eye = DirectX::XMVectorSet(0.0f, 0.7f, 10.0f, 0.f);
     auto at = DirectX::XMVectorSet(0.0f, -0.1f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
     DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));

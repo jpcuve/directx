@@ -23,7 +23,7 @@ private:
 
     typedef struct {
         DirectX::XMFLOAT3 position;
-        DirectX::XMFLOAT3 color;
+        unsigned char color[4];
     } VertexPositionColor;
     
     DeviceResources& m_deviceResources;

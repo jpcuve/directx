@@ -22,8 +22,8 @@ public:
     virtual void Property(std::string_view& dataType, std::string_view& name) = 0;
     virtual void PropertyList(std::string_view& countType, std::string_view& dataType, std::string_view& name) = 0;
     virtual void EndHeader() = 0;
-    virtual void DataFixed(std::string& name, size_t index, size_t lo, size_t hi) = 0;
-    virtual void DataVariable(std::string& name, size_t index, size_t count, size_t lo, size_t hi) = 0;
+    virtual void DataFixed(std::string& name, size_t index, const std::vector<byte> &data, size_t lo, size_t hi) = 0;
+    virtual void DataVariable(std::string& name, size_t index, size_t count, const std::vector<byte> &data, size_t lo, size_t hi) = 0;
 };
 
 class DefaultStanfordHandler: public StanfordHandler {
@@ -34,8 +34,8 @@ class DefaultStanfordHandler: public StanfordHandler {
     void Property(std::string_view &dataType, std::string_view &name) override;
     void PropertyList(std::string_view &countType, std::string_view &dataType, std::string_view &name) override;
     void EndHeader() override;
-    void DataFixed(std::string &name, size_t index, size_t lo, size_t hi) override;
-    void DataVariable(std::string &name, size_t index, size_t count, size_t lo, size_t hi) override;
+    void DataFixed(std::string &name, size_t index, const std::vector<byte> &data, size_t lo, size_t hi) override;
+    void DataVariable(std::string &name, size_t index, size_t count, const std::vector<byte> &data, size_t lo, size_t hi) override;
 };
 
 class StanfordParser {

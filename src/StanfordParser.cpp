@@ -65,13 +65,13 @@ void StanfordParser::Parse(StanfordHandler& handler) {
             auto descriptor = m_descriptors.at(m_descriptorIndex);
             if (descriptor.countSize == 0){ // fixed
                 m_position += descriptor.dataSize;
-                handler.DataFixed(descriptor.name, m_elementIndex, m_position - descriptor.dataSize, m_position);
+                handler.DataFixed(descriptor.name, m_elementIndex, m_data, m_position - descriptor.dataSize, m_position);
             } else { // variable
                 auto count = NextCount(descriptor.countSize);
                 m_position += descriptor.countSize;
                 auto totalLength = count * descriptor.dataSize;
                 m_position += totalLength;
-                handler.DataVariable(descriptor.name, m_elementIndex, count, m_position - totalLength, m_position);
+                handler.DataVariable(descriptor.name, m_elementIndex, count, m_data, m_position - totalLength, m_position);
             }
             m_elementIndex++;
             if (m_elementIndex == descriptor.count){
@@ -166,10 +166,10 @@ void DefaultStanfordHandler::EndHeader() {
     std::cout << "end_header" << std::endl;
 }
 
-void DefaultStanfordHandler::DataFixed(std::string &name, size_t index, size_t lo, size_t hi) {
+void DefaultStanfordHandler::DataFixed(std::string &name, size_t index, const std::vector<byte> &data, size_t lo, size_t hi) {
     std::cout << "data fixed (" << lo << ", " << hi << ")" << std::endl;
 }
 
-void DefaultStanfordHandler::DataVariable(std::string &name, size_t index, size_t count, size_t lo, size_t hi) {
+void DefaultStanfordHandler::DataVariable(std::string &name, size_t index, size_t count, const std::vector<byte> &data, size_t lo, size_t hi) {
     std::cout << "data variable " << count << " (" << lo << ", " << hi << ")" << std::endl;
 }

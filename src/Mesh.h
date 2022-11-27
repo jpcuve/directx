@@ -3,6 +3,7 @@
 #include <stdafx.h>
 #include <utility>
 #include <vector>
+#include <string>
 
 struct VertexPositionColor {
     DirectX::XMFLOAT3 position {0.0, 0.0, 0.0};
@@ -19,6 +20,7 @@ public:
     std::vector<VertexPositionColor> GetVertices();
     static Mesh ship();
     static Mesh cube();
+    static Mesh FromStanford(const std::vector<byte>& data);
 private:
     std::vector<VertexPositionColor> m_vertices;
     std::vector<Triangle> m_triangles;

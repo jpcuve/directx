@@ -3,6 +3,7 @@
 #include "debug.h"
 #include "helper.h"
 #include "StanfordParser.h"
+#include "Mesh.h"
 
 Application application;
 DebugStream dbg;
@@ -18,6 +19,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     auto handler = DefaultStanfordHandler{};
     StanfordParser parser(data);
     parser.Parse(handler);
+    auto mesh = Mesh::FromStanford(data);
     application.Init(hInstance, nCmdShow);
     int retVal = application.Run();
     application.Done(hInstance);

@@ -3,6 +3,9 @@
 //
 
 #include "Mesh.h"
+#include "StanfordParser.h"
+#include <stdexcept>
+#include <vcruntime_string.h>
 
 std::vector<VertexPositionColor> Mesh::GetVertices() {
     std::vector<VertexPositionColor> buffer;
@@ -61,4 +64,42 @@ Mesh Mesh::cube() {
             {1,7,5},
     };
     return {vertices, triangles};
+}
+
+class MeshHandler: public StanfordHandler {
+public:
+    std::vector<VertexPositionColor> m_vertices;
+    std::vector<Triangle> m_triangles;
+    void Invalid() override {}
+    void Ply() override {}
+    void Format(std::string_view &form, std::string_view &version) override {}
+    void Element(std::string_view &name, int quantity) override {}
+    void Property(std::string_view &dataType, std::string_view &name) override {}
+    void PropertyList(std::string_view &countType, std::string_view &dataType, std::string_view &name) override {}
+    void EndHeader() override {}
+    void DataFixed(std::string &name, size_t index, const std::vector<byte> &data, size_t lo, size_t hi) override {
+        if (name != "vertex" || hi - lo != 16){
+            throw std::runtime_error("Unexpected data chunk");
+        }
+        VertexPositionColor vertex {};
+        memcpy(&vertex.position, &data[lo], sizeof(vertex.position));
+        memcpy(&vertex.color, &data[lo + sizeof(DirectX::XMFLOAT3)], sizeof(vertex.color));
+        m_vertices.push_back(vertex);
+    }
+    void DataVariable(std::string &name, size_t index, size_t count, const std::vector<byte> &data, size_t lo, size_t hi) override {
+        if (name != "face" || hi - lo != 12 || count != 3){
+            throw std::runtime_error("Unexpected data chunk");
+        }
+        Triangle triangle {};
+        memcpy(&triangle, &data[lo], count * sizeof(unsigned int));
+    }
+};
+
+Mesh Mesh::FromStanford(const std::vector<byte>& data) {
+    std::vector<VertexPositionColor> vertices;
+    std::vector<Triangle> triangles;
+    StanfordParser parser {data};
+    MeshHandler handler;
+    parser.Parse(handler);
+    return {handler.m_vertices, handler.m_triangles};
 }

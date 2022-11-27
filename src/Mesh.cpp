@@ -91,7 +91,11 @@ public:
             throw std::runtime_error("Unexpected data chunk");
         }
         Triangle triangle {};
-        memcpy(&triangle, &data[lo], count * sizeof(unsigned int));
+        auto len = sizeof(unsigned int);
+        memcpy(&triangle.indices[0], &data[lo], len);
+        memcpy(&triangle.indices[1], &data[lo + 2 * len], len);
+        memcpy(&triangle.indices[2], &data[lo + len], len);
+        m_triangles.push_back(triangle);
     }
 };
 

@@ -45,7 +45,12 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a mesh
     auto device = m_deviceResources.GetDevice();
 
+/*
     auto mesh {Mesh::ship()};
+    auto vertices = mesh.GetVertices();
+*/
+    std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/house.ply");
+    auto mesh = Mesh::FromStanford(data);
     auto vertices = mesh.GetVertices();
 
     m_vertexCount = vertices.size();
@@ -70,7 +75,7 @@ void Renderer::InitDeviceDependent() {
 }
 
 void Renderer::InitWindowSizeDependent(){
-    auto eye = DirectX::XMVectorSet(0.0f, 0.7f, 7.0f, 0.f);
+    auto eye = DirectX::XMVectorSet(0.0f, 0.7f, 107.0f, 0.f);
     auto at = DirectX::XMVectorSet(0.0f, -0.1f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
     DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
@@ -78,7 +83,7 @@ void Renderer::InitWindowSizeDependent(){
     float aspectRatioX = static_cast<float>(viewportSize.cx) / static_cast<float>(viewportSize.cy);
     float aspectRatioY = aspectRatioX < (16.0f / 9.0f) ? aspectRatioX / (16.0f / 9.0f) : 1.0f;  //?
     float nearPlane = 0.01f;
-    float farPlane = 100.0f;
+    float farPlane = 200.0f;
     DirectX::XMStoreFloat4x4(&m_constantData.projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovRH(2.0f * atan(tan(DirectX::XMConvertToRadians(70) * 0.5f) / aspectRatioY), aspectRatioX, nearPlane, farPlane)));
 }
 

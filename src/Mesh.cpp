@@ -6,6 +6,8 @@
 #include "StanfordParser.h"
 #include <stdexcept>
 #include <vcruntime_string.h>
+#include "OpenSimplexNoise.h"
+#include <numbers>
 
 std::vector<VertexPositionNormalColor> Mesh::GetVertices() {
     std::vector<VertexPositionNormalColor> buffer;
@@ -108,6 +110,46 @@ public:
     }
 };
 
+Mesh Mesh::noise(size_t extent, float multiplier) {
+    OpenSimplexNoise::Noise n;
+    std::vector<float> heights(4 * extent * extent);
+    auto size {2 * extent};
+    for (auto i = 0; i < size; i++){
+        for (auto j = 0; j < size; j++){
+            auto x{static_cast<double>(i) / static_cast<double>(size)} ;
+            auto y {static_cast<double>(j) / static_cast<double>(size)};
+            auto p1 {cos(x * 2.0 * std::numbers::pi)};
+            auto p2 {sin(x * 2.0 * std::numbers::pi)};
+            auto p3 {cos(y * 2.0 * std::numbers::pi)};
+            auto p4 {sin(y * 2.0 * std::numbers::pi)};
+            heights[j * size + i] = static_cast<float>(n.eval(p1, p2, p3, p4) * 30.0);
+        }
+    }
+    unsigned char color[4] = {0xFF, 0xFF, 0xFF, 0xFF};
+    std::vector<VertexPositionNormalColor> vertices;
+    std::vector<Triangle> triangles;
+    unsigned int pos {0};
+    for (auto i = 0; i < size -1; i++){
+        for (auto j = 0; j < size -1; j++){
+            VertexPositionNormalColor vs[4];
+            auto x {static_cast<float>(i + 1 - extent) * multiplier};
+            auto y {static_cast<float>(j + 1 - extent) * multiplier};
+            vs[0].position = DirectX::XMFLOAT3{x, y, heights[j * size + i]};
+            vs[1].position = DirectX::XMFLOAT3{x + multiplier, y, heights[j * size + i + 1]};
+            vs[2].position = DirectX::XMFLOAT3{x + multiplier, y + multiplier, heights[(j + 1) * size + i + 1]};
+            vs[3].position = DirectX::XMFLOAT3{x, y + multiplier, heights[(j + 1) * size + i]};
+            for (auto& vertex: vs){
+                memcpy(vertex.color, color, sizeof(color));
+                vertices.push_back(vertex);
+            }
+            triangles.push_back(Triangle{pos, pos + 1, pos + 2});
+            triangles.push_back(Triangle{pos + 2, pos + 3, pos});
+            pos += 4;
+        }
+    }
+    return {vertices, triangles};
+}
+
 Mesh Mesh::FromStanford(const std::vector<byte>& data) {
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
@@ -116,3 +158,4 @@ Mesh Mesh::FromStanford(const std::vector<byte>& data) {
     parser.Parse(handler);
     return {handler.m_vertices, handler.m_triangles};
 }
+

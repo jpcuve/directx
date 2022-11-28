@@ -53,13 +53,13 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a mesh
     auto device = m_deviceResources.GetDevice();
 
-/*
-    auto mesh {Mesh::ship()};
+    auto mesh {Mesh::noise(20, 5)};
     auto vertices = mesh.GetVertices();
-*/
-    std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/house.ply");
+/*
+    std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/cone.ply");
     auto mesh = Mesh::FromStanford(data);
     auto vertices = mesh.GetVertices();
+*/
 
     m_vertexCount = vertices.size();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);

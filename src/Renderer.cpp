@@ -20,11 +20,19 @@ void Renderer::InitShaders() {
         .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
         .InstanceDataStepRate = 0,
     }, {
+        .SemanticName = "NORMAL",
+        .SemanticIndex = 0,
+        .Format = DXGI_FORMAT_R32G32B32_FLOAT,
+        .InputSlot = 0,
+        .AlignedByteOffset = 3 * sizeof(FLOAT),
+        .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
+        .InstanceDataStepRate = 0,
+    }, {
         .SemanticName = "COLOR",
         .SemanticIndex = 0,
         .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
         .InputSlot = 0,
-        .AlignedByteOffset = 3 * sizeof(FLOAT),
+        .AlignedByteOffset = 6 * sizeof(FLOAT),
         .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
         .InstanceDataStepRate = 0,
     } };
@@ -54,7 +62,7 @@ void Renderer::InitBuffers() {  // a mesh
     auto vertices = mesh.GetVertices();
 
     m_vertexCount = vertices.size();
-    CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
         .pSysMem = vertices.data(),
         .SysMemPitch = 0,
@@ -106,7 +114,7 @@ void Renderer::Render() {
     deviceContext->ClearRenderTargetView(renderTargetView, reinterpret_cast<float*>(&color));
     deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     // Input Assembly stage
-    UINT stride = sizeof(VertexPositionColor);
+    UINT stride = sizeof(VertexPositionNormalColor);
     UINT offset = 0;
     deviceContext->IASetVertexBuffers(0, 1, m_pVertexBuffer.GetAddressOf(), &stride, &offset);
     deviceContext->IASetInputLayout(m_pInputLayout.Get());

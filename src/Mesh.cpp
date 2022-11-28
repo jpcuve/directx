@@ -7,24 +7,37 @@
 #include <stdexcept>
 #include <vcruntime_string.h>
 
-std::vector<VertexPositionColor> Mesh::GetVertices() {
-    std::vector<VertexPositionColor> buffer;
+std::vector<VertexPositionNormalColor> Mesh::GetVertices() {
+    std::vector<VertexPositionNormalColor> buffer;
     for (auto& triangle: m_triangles){
-        for (auto& index: triangle.indices){
-            auto& vertex = m_vertices[index];
-            buffer.push_back(vertex);  // should copy hopefully
-        }
+        // here we compute the normal to the triangle
+        auto& v0 = m_vertices[triangle.indices[0]];
+        auto& v1 = m_vertices[triangle.indices[1]];
+        auto& v2 = m_vertices[triangle.indices[2]];
+        auto x0 = DirectX::XMLoadFloat3(&v0.position);
+        auto x1 = DirectX::XMLoadFloat3(&v1.position);
+        auto x2 = DirectX::XMLoadFloat3(&v2.position);
+        auto dir1 = DirectX::XMVectorSubtract(x1, x0);
+        auto dir2 = DirectX::XMVectorSubtract(x0, x2);
+        auto cross = DirectX::XMVector3Cross(dir1, dir2);
+        auto norm = DirectX::XMVector3Normalize(cross);
+        DirectX::XMStoreFloat3(&v0.normal, norm);
+        DirectX::XMStoreFloat3(&v1.normal, norm);
+        DirectX::XMStoreFloat3(&v2.normal, norm);
+        buffer.push_back(v0);  // should copy hopefully
+        buffer.push_back(v1);
+        buffer.push_back(v2);
     }
     return buffer;
 }
 
 Mesh Mesh::ship() {
-    std::vector<VertexPositionColor> vertices {
-            {DirectX::XMFLOAT3(5, 0, 0), {0xFF, 0x00, 0x00, 0xFF}},
-            {DirectX::XMFLOAT3(0, 0, 2), {0x00, 0xFF, 0x00, 0xFF}},
-            {DirectX::XMFLOAT3(0, 0, 0), {0x00, 0x00, 0xFF, 0xFF}},
-            {DirectX::XMFLOAT3(-5, -5, 0), {0x80, 0x80, 0x80, 0xFF}},
-            {DirectX::XMFLOAT3(-5, 5, 0), {0x80, 0x80, 0x80, 0xFF}},
+    std::vector<VertexPositionNormalColor> vertices {
+            {DirectX::XMFLOAT3(5, 0, 0), DirectX::XMFLOAT3(0, 0, 0), {0xFF, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0, 0, 2), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-5, -5, 0), DirectX::XMFLOAT3(0, 0, 0), {0x80, 0x80, 0x80, 0xFF}},
+            {DirectX::XMFLOAT3(-5, 5, 0), DirectX::XMFLOAT3(0, 0, 0), {0x80, 0x80, 0x80, 0xFF}},
     };
     std::vector<Triangle> triangles {
             {0, 3, 1},
@@ -38,16 +51,16 @@ Mesh Mesh::ship() {
 }
 
 Mesh Mesh::cube() {
-    std::vector<VertexPositionColor> vertices {
-            {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), {0x00, 0x00, 0x00, 0xFF}},
-            {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), {0x00, 0x00, 0xFF, 0xFF}},
-            {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), {0x00, 0xFF, 0x00, 0xFF}},
-            {DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), {0x00, 0xFF, 0xFF, 0xFF}},
+    std::vector<VertexPositionNormalColor> vertices {
+            {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f,-0.5f), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(-0.5f, 0.5f, 0.5f), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0xFF, 0xFF, 0xFF}},
 
-            {DirectX::XMFLOAT3(0.5f,-0.5f,-0.5f), {0xFF, 0x00, 0x00, 0xFF}},
-            {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), {0xFF, 0x00, 0xFF, 0xFF}},
-            {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), {0xFF, 0xFF, 0x00, 0xFF}},
-            {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), {0xFF, 0xFF, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f,-0.5f), DirectX::XMFLOAT3(0, 0, 0), {0xFF, 0x00, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f,-0.5f, 0.5f), DirectX::XMFLOAT3(0, 0, 0), {0xFF, 0x00, 0xFF, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f,-0.5f), DirectX::XMFLOAT3(0, 0, 0), {0xFF, 0xFF, 0x00, 0xFF}},
+            {DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f), DirectX::XMFLOAT3(0, 0, 0), {0xFF, 0xFF, 0xFF, 0xFF}},
     };
     std::vector<Triangle> triangles {
             {0,2,1}, // -x
@@ -68,7 +81,7 @@ Mesh Mesh::cube() {
 
 class MeshHandler: public StanfordHandler {
 public:
-    std::vector<VertexPositionColor> m_vertices;
+    std::vector<VertexPositionNormalColor> m_vertices;
     std::vector<Triangle> m_triangles;
     void Invalid() override {}
     void Ply() override {}
@@ -81,7 +94,7 @@ public:
         if (name != "vertex" || hi - lo != 16){
             throw std::runtime_error("Unexpected data chunk");
         }
-        VertexPositionColor vertex {};
+        VertexPositionNormalColor vertex {};
         memcpy(&vertex.position, &data[lo], sizeof(vertex.position));
         memcpy(&vertex.color, &data[lo + sizeof(DirectX::XMFLOAT3)], sizeof(vertex.color));
         m_vertices.push_back(vertex);
@@ -100,7 +113,7 @@ public:
 };
 
 Mesh Mesh::FromStanford(const std::vector<byte>& data) {
-    std::vector<VertexPositionColor> vertices;
+    std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
     StanfordParser parser {data};
     MeshHandler handler;

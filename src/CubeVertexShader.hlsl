@@ -7,8 +7,9 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 
 struct VS_INPUT
 {
-	float3 vPos   : POSITION;
-	float3 vColor : COLOR0;
+	float3 vPos: POSITION;
+	float3 vNorm: NORMAL;
+	float4 vColor: COLOR0;
 };
 
 struct VS_OUTPUT
@@ -21,16 +22,14 @@ VS_OUTPUT main(VS_INPUT input)
 {
 	VS_OUTPUT output;
 
-	float4 pos = float4(input.vPos, 1.0f);
-
 	// Transform the m_position from object space to homogeneous projection space
-	pos = mul(pos, mWorld);
-	pos = mul(pos, View);
-	pos = mul(pos, Projection);
-	output.Position = pos;
-
+	float4 positionInViewSpace = mul(mul(float4(input.vPos, 1.0f), mWorld), View);
+	float4 positionInProjectedSpace = mul(positionInViewSpace, Projection);
+    float4 normalInWorldSpace = normalize(mul(float4(input.vNorm, 0), mWorld));
+    float factor = (normalInWorldSpace.z + 1.0f) / 2.0f;
 	// Just pass through the color data
-	output.Color = float4(input.vColor, 1.0f);
+	output.Position = positionInProjectedSpace;
+	output.Color = float4(input.vColor.rgb * factor, input.vColor.a);
 
 	return output;
 }

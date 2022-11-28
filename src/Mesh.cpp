@@ -11,22 +11,18 @@ std::vector<VertexPositionNormalColor> Mesh::GetVertices() {
     std::vector<VertexPositionNormalColor> buffer;
     for (auto& triangle: m_triangles){
         // here we compute the normal to the triangle
-        auto& v0 = m_vertices[triangle.indices[0]];
-        auto& v1 = m_vertices[triangle.indices[1]];
-        auto& v2 = m_vertices[triangle.indices[2]];
-        auto x0 = DirectX::XMLoadFloat3(&v0.position);
-        auto x1 = DirectX::XMLoadFloat3(&v1.position);
-        auto x2 = DirectX::XMLoadFloat3(&v2.position);
-        auto dir1 = DirectX::XMVectorSubtract(x1, x0);
-        auto dir2 = DirectX::XMVectorSubtract(x0, x2);
+        DirectX::XMVECTOR v[3];
+        for (int i = 0; i < 3; i++){
+            v[i] = DirectX::XMLoadFloat3(&m_vertices[triangle.indices[i]].position);
+        }
+        auto dir1 = DirectX::XMVectorSubtract(v[1], v[0]);
+        auto dir2 = DirectX::XMVectorSubtract(v[0], v[2]);
         auto cross = DirectX::XMVector3Cross(dir1, dir2);
         auto norm = DirectX::XMVector3Normalize(cross);
-        DirectX::XMStoreFloat3(&v0.normal, norm);
-        DirectX::XMStoreFloat3(&v1.normal, norm);
-        DirectX::XMStoreFloat3(&v2.normal, norm);
-        buffer.push_back(v0);  // should copy hopefully
-        buffer.push_back(v1);
-        buffer.push_back(v2);
+        for (unsigned int index : triangle.indices){
+            DirectX::XMStoreFloat3(&m_vertices[index].normal, norm);
+            buffer.push_back(m_vertices[index]);
+        }
     }
     return buffer;
 }

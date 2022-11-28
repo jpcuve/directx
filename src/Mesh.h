@@ -21,7 +21,7 @@ public:
     std::vector<VertexPositionNormalColor> GetVertices();
     static Mesh ship();
     static Mesh cube();
-    static Mesh noise(size_t extent, float multiplier);
+    static Mesh noise(size_t extent, float surfaceMultiplier, float heightMultiplier);
     static Mesh FromStanford(const std::vector<byte>& data);
 private:
     std::vector<VertexPositionNormalColor> m_vertices;

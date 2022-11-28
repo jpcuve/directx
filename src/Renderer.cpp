@@ -53,7 +53,7 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a mesh
     auto device = m_deviceResources.GetDevice();
 
-    auto mesh {Mesh::noise(20, 5)};
+    auto mesh {Mesh::noise(5, 10, 30)};
     auto vertices = mesh.GetVertices();
 /*
     std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/cone.ply");
@@ -83,20 +83,20 @@ void Renderer::InitDeviceDependent() {
 }
 
 void Renderer::InitWindowSizeDependent(){
-    auto eye = DirectX::XMVectorSet(0.0f, 0.7f, 107.0f, 0.f);
-    auto at = DirectX::XMVectorSet(0.0f, -0.1f, 0.0f, 0.f);
+    auto eye = DirectX::XMVectorSet(0.0f, -50.0f, -50.0f, 0.f);
+    auto at = DirectX::XMVectorSet(0.0f, -0.0f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
-    DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
+    DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtLH(eye, at, up)));
     auto viewportSize = m_deviceResources.GetViewportSize();
     float aspectRatioX = static_cast<float>(viewportSize.cx) / static_cast<float>(viewportSize.cy);
     float aspectRatioY = aspectRatioX < (16.0f / 9.0f) ? aspectRatioX / (16.0f / 9.0f) : 1.0f;  //?
     float nearPlane = 0.01f;
     float farPlane = 200.0f;
-    DirectX::XMStoreFloat4x4(&m_constantData.projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovRH(2.0f * atan(tan(DirectX::XMConvertToRadians(70) * 0.5f) / aspectRatioY), aspectRatioX, nearPlane, farPlane)));
+    DirectX::XMStoreFloat4x4(&m_constantData.projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(2.0f * atan(tan(DirectX::XMConvertToRadians(70) * 0.5f) / aspectRatioY), aspectRatioX, nearPlane, farPlane)));
 }
 
 void Renderer::Update() {
-    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians((float)m_frameCount++))));
+    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(0))));
     if (m_frameCount == MAXUINT) {
         m_frameCount = 0;
     }

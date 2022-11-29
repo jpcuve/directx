@@ -51,12 +51,16 @@ std::vector<DirectX::XMFLOAT3> GameModel::LocalMap(DirectX::XMFLOAT2 &position) 
     auto offset {DirectX::XMFLOAT2{lb.x - static_cast<FLOAT>(a[0]) * step, lb.y - static_cast<FLOAT>(a[1]) * step}};
     dbg << "Offset: (" << offset.x << ", " << offset.y << ")" << std::endl << std::flush;
     for (auto i = 0; i < resolution; i++){
-        auto x = AdjustCoordinate(a[0] + i);
+        auto xc = AdjustCoordinate(a[0] + i);
         for (auto j = 0; j < resolution; j++){
-            auto y = AdjustCoordinate(a[1] + j);
-            dbg << "(" << x << ", " << y << ")" << std::endl << std::flush;
+            auto yc = AdjustCoordinate(a[1] + j);
+            dbg << "(" << xc << ", " << yc << ")" << std::endl << std::flush;
+            auto x = static_cast<FLOAT>(xc) * step + offset.x - position.x;
+            auto y = static_cast<FLOAT>(yc) * step + offset.y - position.y;
+            auto height{m_heightMap[xc + yc * m_heightResolution]};
+            auto point {DirectX::XMFLOAT3{x, y, height}};
+            dbg << "[" << point.x << ", " << point.y << ", " << point.z << "]" << std::endl << std::flush;
         }
     }
-
     return map;
 }

@@ -1,9 +1,7 @@
 #include "directx.h"
 #include "Application.h"
 #include "debug.h"
-#include "helper.h"
-#include "StanfordParser.h"
-#include "Mesh.h"
+#include "GameModel.h"
 
 Application application;
 DebugStream dbg;
@@ -15,11 +13,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
     dbg << "Starting directx demo" << std::endl << std::flush;
-    std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/house.ply");
-    auto handler = DefaultStanfordHandler{};
-    StanfordParser parser(data);
-    parser.Parse(handler);
-    auto mesh = Mesh::FromStanford(data);
+    GameModel gameModel;
+    for (int i = 0; i < 60; i++){
+        dbg << gameModel.GetHeight(static_cast<float>(i), 0) << std::endl;
+    }
+    dbg << std::flush;
     application.Init(hInstance, nCmdShow);
     int retVal = application.Run();
     application.Done(hInstance);

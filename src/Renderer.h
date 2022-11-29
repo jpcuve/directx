@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "DeviceResources.h"
+#include "GameModel.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -22,6 +23,7 @@ private:
     } ConstantData;
 
     DeviceResources& m_deviceResources;
+    GameModel m_GameModel;
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
     ComPtr<ID3D11VertexShader> m_pVertexShader;
     ComPtr<ID3D11InputLayout> m_pInputLayout;

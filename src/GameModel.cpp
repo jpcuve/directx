@@ -22,12 +22,12 @@ GameModel::GameModel() {
     }
 }
 
-size_t GameModel::ClampCoordinate(long c){
+size_t GameModel::ClampCoordinate(long c) const{
     auto res = static_cast<long>(m_heightResolution);
     return static_cast<size_t>(((c % res) + res) % res);
 }
 
-long GameModel::LowHeightCoordinate(FLOAT c){
+long GameModel::LowHeightCoordinate(FLOAT c) const{
     auto sc = c * static_cast<FLOAT>(m_heightResolution) / m_playgroundEdge;
     return static_cast<long>(floorf(sc));
 }

@@ -14,6 +14,6 @@ private:
     size_t m_heightResolution {60};
     std::vector<FLOAT> m_heightMap;
     DirectX::XMFLOAT3 m_player {43, 19, 0};
-    size_t ClampCoordinate(long c);
-    long LowHeightCoordinate(FLOAT c);
+    size_t ClampCoordinate(long c) const;
+    long LowHeightCoordinate(FLOAT c) const;
 };

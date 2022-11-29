@@ -15,8 +15,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     dbg << "Starting directx demo" << std::endl << std::flush;
     GameModel gameModel;
     for (int i = 0; i < 60; i++){
-        dbg << gameModel.GetHeight(static_cast<float>(i), 0) << std::endl;
+        auto position {DirectX::XMFLOAT2{static_cast<float>(i), 0}};
+        dbg << gameModel.GetHeight(position) << std::endl;
     }
+    auto position {DirectX::XMFLOAT2{43, 19}};
+    auto map {gameModel.LocalMap(position)};
     dbg << std::flush;
     application.Init(hInstance, nCmdShow);
     int retVal = application.Run();

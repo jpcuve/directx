@@ -5,6 +5,7 @@
 #include <numbers>
 #include "GameModel.h"
 #include "OpenSimplexNoise.h"
+#include "debug.h"
 
 GameModel::GameModel() {
     OpenSimplexNoise::Noise noise;
@@ -22,7 +23,7 @@ GameModel::GameModel() {
     }
 }
 
-size_t GameModel::ClampCoordinate(long c) const{
+size_t GameModel::AdjustCoordinate(long c) const{
     auto res = static_cast<long>(m_heightResolution);
     return static_cast<size_t>(((c % res) + res) % res);
 }
@@ -32,12 +33,30 @@ long GameModel::LowHeightCoordinate(FLOAT c) const{
     return static_cast<long>(floorf(sc));
 }
 
-FLOAT GameModel::GetHeight(FLOAT x, FLOAT y) {
-    auto lx {LowHeightCoordinate(x)};
-    auto ly {LowHeightCoordinate(y)};
-    auto h1 {m_heightMap[ClampCoordinate(ly) * m_heightResolution + ClampCoordinate(lx)]};
-    auto h2 {m_heightMap[ClampCoordinate(ly) * m_heightResolution + ClampCoordinate(lx + 1)]};
-    auto h3 {m_heightMap[ClampCoordinate(ly + 1) * m_heightResolution + ClampCoordinate(lx + 1)]};
-    auto h4 {m_heightMap[ClampCoordinate(ly + 1) * m_heightResolution + ClampCoordinate(lx)]};
+FLOAT GameModel::GetHeight(DirectX::XMFLOAT2 &position) {
+    long l[2] {LowHeightCoordinate(position.x), LowHeightCoordinate(position.y)};
+    auto h1 {m_heightMap[AdjustCoordinate(l[1]) * m_heightResolution + AdjustCoordinate(l[0])]};
+    auto h2 {m_heightMap[AdjustCoordinate(l[1]) * m_heightResolution + AdjustCoordinate(l[0] + 1)]};
+    auto h3 {m_heightMap[AdjustCoordinate(l[1] + 1) * m_heightResolution + AdjustCoordinate(l[0] + 1)]};
+    auto h4 {m_heightMap[AdjustCoordinate(l[1] + 1) * m_heightResolution + AdjustCoordinate(l[0])]};
     return (h1 + h2 + h3 + h4) / 4;
+}
+
+std::vector<DirectX::XMFLOAT3> GameModel::LocalMap(DirectX::XMFLOAT2 &position) {
+    std::vector<DirectX::XMFLOAT3> map;
+    auto lb {DirectX::XMFLOAT2 {position.x - m_surfaceEdge / 2.0f, position.y - m_surfaceEdge / 2.0f}};
+    long a[2] {LowHeightCoordinate(lb.x), LowHeightCoordinate(lb.y)};
+    size_t resolution = 1 + m_heightResolution * static_cast<size_t>(m_surfaceEdge) / static_cast<size_t>(m_playgroundEdge);
+    float step = m_playgroundEdge / static_cast<FLOAT>(m_heightResolution);
+    auto offset {DirectX::XMFLOAT2{lb.x - static_cast<FLOAT>(a[0]) * step, lb.y - static_cast<FLOAT>(a[1]) * step}};
+    dbg << "Offset: (" << offset.x << ", " << offset.y << ")" << std::endl << std::flush;
+    for (auto i = 0; i < resolution; i++){
+        auto x = AdjustCoordinate(a[0] + i);
+        for (auto j = 0; j < resolution; j++){
+            auto y = AdjustCoordinate(a[1] + j);
+            dbg << "(" << x << ", " << y << ")" << std::endl << std::flush;
+        }
+    }
+
+    return map;
 }

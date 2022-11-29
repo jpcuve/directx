@@ -6,14 +6,14 @@
 class GameModel {
 public:
     GameModel();
-    FLOAT GetHeight(FLOAT x, FLOAT y);
+    FLOAT GetHeight(DirectX::XMFLOAT2 &position);
+    std::vector<DirectX::XMFLOAT3> LocalMap(DirectX::XMFLOAT2 &position);
 private:
     FLOAT m_playgroundEdge {60.0};
     FLOAT m_surfaceEdge {30.0};
     FLOAT m_maxHeight {10.0};
-    size_t m_heightResolution {60};
+    size_t m_heightResolution {10};
     std::vector<FLOAT> m_heightMap;
-    DirectX::XMFLOAT3 m_player {43, 19, 0};
-    size_t ClampCoordinate(long c) const;
-    long LowHeightCoordinate(FLOAT c) const;
+    [[nodiscard]] size_t AdjustCoordinate(long c) const;
+    [[nodiscard]] long LowHeightCoordinate(FLOAT c) const;
 };

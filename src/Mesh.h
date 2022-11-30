@@ -22,6 +22,7 @@ public:
     static Mesh ship();
     static Mesh cube();
     static Mesh noise(size_t extent, float surfaceMultiplier, float heightMultiplier);
+    static Mesh FromHeightMap(const std::vector<DirectX::XMFLOAT3> &grid, size_t width, size_t height);
     static Mesh FromStanford(const std::vector<byte>& data);
 private:
     std::vector<VertexPositionNormalColor> m_vertices;

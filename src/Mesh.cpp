@@ -9,6 +9,7 @@
 #include "OpenSimplexNoise.h"
 #include <numbers>
 #include <algorithm>
+#include <stdexcept>
 
 std::vector<VertexPositionNormalColor> Mesh::GetVertices() {
     std::vector<VertexPositionNormalColor> buffer;
@@ -152,6 +153,9 @@ Mesh Mesh::noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
 }
 
 Mesh Mesh::FromHeightMap(const std::vector<DirectX::XMFLOAT3> &grid, size_t width, size_t height){
+    if (grid.size() != width * height){
+        throw std::runtime_error("");
+    }
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
     byte color[4] {0xFF, 0xFF, 0xFF, 0xFF};

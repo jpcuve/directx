@@ -4,15 +4,16 @@
 #include <utility>
 #include <vector>
 #include <string>
+#include <array>
 
 struct VertexPositionNormalColor {
     DirectX::XMFLOAT3 position {0.0, 0.0, 0.0};
     DirectX::XMFLOAT3 normal {0.0, 0.0, 0.0};
-    unsigned char color[4] {0, 0, 0, 1};
+    std::array<byte, 4> color {0, 0, 0, 1};
 };
 
 struct Triangle {
-    unsigned int indices[3] {0, 0, 0};
+    std::array<unsigned int, 3> indices {0, 0, 0};
 };
 
 class Mesh {

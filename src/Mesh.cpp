@@ -127,7 +127,7 @@ Mesh Mesh::noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
             heights[j * size + i] = static_cast<float>(n.eval(p1, p2, p3, p4)) * -heightMultiplier;
         }
     }
-    unsigned char color[4] = {0xFF, 0xFF, 0xFF, 0xFF};
+    std::array<byte, 4> color = {0xFF, 0xFF, 0xFF, 0xFF};
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
     unsigned int pos {0};
@@ -141,7 +141,7 @@ Mesh Mesh::noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
             vs[2].position = DirectX::XMFLOAT3{x + surfaceMultiplier, y + surfaceMultiplier, heights[(j + 1) * size + i + 1]};
             vs[3].position = DirectX::XMFLOAT3{x, y + surfaceMultiplier, heights[(j + 1) * size + i]};
             for (auto& vertex: vs){
-                memcpy(vertex.color, color, sizeof(color));
+                vertex.color = color;
                 vertices.push_back(vertex);
             }
             triangles.push_back(Triangle{pos, pos + 3, pos + 2});
@@ -158,7 +158,7 @@ Mesh Mesh::FromHeightMap(const std::vector<DirectX::XMFLOAT3> &grid, size_t widt
     }
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
-    byte color[4] {0xFF, 0xFF, 0xFF, 0xFF};
+    std::array<byte,4> color {0xFF, 0xFF, 0xFF, 0xFF};
     unsigned int pos {0};
     for (auto i = 0; i < width -1; i++){
         for (auto j = 0; j < height -1; j++){
@@ -168,7 +168,7 @@ Mesh Mesh::FromHeightMap(const std::vector<DirectX::XMFLOAT3> &grid, size_t widt
             vs[2].position = grid[(i + 1) + (j + 1) * width];
             vs[3].position = grid[i + (j + 1) * width];
             for (auto& vertex: vs){
-                std::copy(color, color + sizeof(color), vertex.color);
+                vertex.color = color;
                 vertices.push_back(vertex);
             }
             triangles.push_back(Triangle{pos, pos + 3, pos + 2});

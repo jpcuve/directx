@@ -127,7 +127,7 @@ Mesh Mesh::noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
             heights[j * size + i] = static_cast<float>(n.eval(p1, p2, p3, p4)) * -heightMultiplier;
         }
     }
-    std::array<byte, 4> color = {0xFF, 0xFF, 0xFF, 0xFF};
+    std::array<byte, 4> color {0xFF, 0xFF, 0xFF, 0xFF};
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
     unsigned int pos {0};

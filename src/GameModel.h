@@ -10,9 +10,10 @@ public:
     std::vector<DirectX::XMFLOAT3> LocalMap(DirectX::XMFLOAT2 &position);
 private:
     FLOAT m_playgroundEdge {60.0};
-    FLOAT m_surfaceEdge {30.0};
+    size_t m_playgroundResolution {10};
+    size_t m_surfaceResolution {5};
+//    FLOAT m_surfaceEdge {30.0};
     FLOAT m_maxHeight {10.0};
-    size_t m_heightResolution {10};
     std::vector<FLOAT> m_heightMap;
     [[nodiscard]] size_t AdjustCoordinate(long c) const;
     [[nodiscard]] long LowHeightCoordinate(FLOAT c) const;

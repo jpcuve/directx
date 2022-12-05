@@ -215,7 +215,7 @@ namespace OpenSimplexNoise
         double ys = y + stretchOffset;
         double zs = z + stretchOffset;
 
-        //static_cast<int>(floor to get simplectic honeycomb coordinates of rhombohedron (stretched cube) super-cell origin.
+        //static_cast<int>(floor to get simplectic honeycomb coordinates of rhombohedron (stretched Cube) super-cell origin.
         int xsb = static_cast<int>(floor(xs));
         int ysb = static_cast<int>(floor(ys));
         int zsb = static_cast<int>(floor(zs));

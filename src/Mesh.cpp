@@ -31,7 +31,7 @@ std::vector<VertexPositionNormalColor> Mesh::GetVertices() {
     return buffer;
 }
 
-Mesh Mesh::ship() {
+Mesh Mesh::Ship() {
     std::vector<VertexPositionNormalColor> vertices {
             {DirectX::XMFLOAT3(5, 0, 0), DirectX::XMFLOAT3(0, 0, 0), {0xFF, 0x00, 0x00, 0xFF}},
             {DirectX::XMFLOAT3(0, 0, 2), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0xFF, 0x00, 0xFF}},
@@ -50,7 +50,7 @@ Mesh Mesh::ship() {
     return {vertices, triangles};
 }
 
-Mesh Mesh::cube() {
+Mesh Mesh::Cube() {
     std::vector<VertexPositionNormalColor> vertices {
             {DirectX::XMFLOAT3(-0.5f,-0.5f,-0.5f), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0x00, 0x00, 0xFF}},
             {DirectX::XMFLOAT3(-0.5f,-0.5f, 0.5f), DirectX::XMFLOAT3(0, 0, 0), {0x00, 0x00, 0xFF, 0xFF}},
@@ -112,7 +112,7 @@ public:
     }
 };
 
-Mesh Mesh::noise(size_t extent, float surfaceMultiplier, float heightMultiplier) {
+Mesh Mesh::Noise(size_t extent, float surfaceMultiplier, float heightMultiplier) {
     OpenSimplexNoise::Noise n;
     std::vector<float> heights(4 * extent * extent);
     auto size {2 * extent};
@@ -152,29 +152,25 @@ Mesh Mesh::noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
     return {vertices, triangles};
 }
 
-Mesh Mesh::FromHeightMap(const std::vector<DirectX::XMFLOAT3> &grid, size_t width, size_t height){
-    if (grid.size() != width * height){
-        throw std::runtime_error("");
-    }
+
+Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2> &heights, float tileEdge) {
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
-    std::array<byte,4> color {0xFF, 0xFF, 0xFF, 0xFF};
-    unsigned int pos {0};
-    for (auto i = 0; i < width -1; i++){
-        for (auto j = 0; j < height -1; j++){
-            VertexPositionNormalColor vs[4];
-            vs[0].position = grid[i + j * width];
-            vs[1].position = grid[(i + 1) + j * width];
-            vs[2].position = grid[(i + 1) + (j + 1) * width];
-            vs[3].position = grid[i + (j + 1) * width];
-            for (auto& vertex: vs){
-                vertex.color = color;
-                vertices.push_back(vertex);
-            }
-            triangles.push_back(Triangle{pos, pos + 3, pos + 2});
-            triangles.push_back(Triangle{pos, pos + 2, pos + 1});
-            pos += 4;
+    std::array<byte, 4> color {0xFF, 0xFF, 0xFF, 0xFF};
+    UINT pos {0};
+    for (auto i = 0; i < heights.size() - 1; i++){
+        std::array<VertexPositionNormalColor, 4> vs;
+        float x = static_cast<float>(i) * tileEdge;
+        vs[0].position = DirectX::XMFLOAT3{x, 0, heights[i].x};
+        vs[1].position = DirectX::XMFLOAT3{x, tileEdge, heights[i].y};
+        vs[2].position = DirectX::XMFLOAT3{x + tileEdge, tileEdge, heights[i + 1].y};
+        vs[3].position = DirectX::XMFLOAT3{x + tileEdge, 0, heights[i + 1].x};
+        for (auto& vertex: vs){
+            vertex.color = color;
+            vertices.push_back(vertex);
         }
+        triangles.push_back(Triangle{pos, pos + 1, pos + 2});
+        triangles.push_back(Triangle{pos + 2, pos + 3, pos});
     }
     return {vertices, triangles};
 }
@@ -187,4 +183,5 @@ Mesh Mesh::FromStanford(const std::vector<byte>& data) {
     parser.Parse(handler);
     return {handler.m_vertices, handler.m_triangles};
 }
+
 

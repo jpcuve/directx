@@ -53,7 +53,7 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a mesh
     auto device = m_deviceResources.GetDevice();
 
-    auto mesh {Mesh::noise(5, 10, 30)};
+    auto mesh {Mesh::Noise(5, 10, 30)};
     auto vertices = mesh.GetVertices();
 /*
     std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/sphere.ply");

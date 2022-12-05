@@ -20,13 +20,12 @@ class Mesh {
 public:
     Mesh(std::vector<VertexPositionNormalColor> vertices, std::vector<Triangle> triangles): m_vertices{std::move(vertices)}, m_triangles{std::move(triangles)}{};
     std::vector<VertexPositionNormalColor> GetVertices();
-    static Mesh ship();
-    static Mesh cube();
-    static Mesh noise(size_t extent, float surfaceMultiplier, float heightMultiplier);
-    static Mesh FromHeightMap(const std::vector<DirectX::XMFLOAT3> &grid, size_t width, size_t height);
+    static Mesh Ship();
+    static Mesh Cube();
+    static Mesh Noise(size_t extent, float surfaceMultiplier, float heightMultiplier);
     static Mesh FromStanford(const std::vector<byte>& data);
+    static Mesh FromHeightStrip(const std::vector<DirectX::XMFLOAT2> &heights, float tileEdge);
 private:
     std::vector<VertexPositionNormalColor> m_vertices;
     std::vector<Triangle> m_triangles;
-
 };

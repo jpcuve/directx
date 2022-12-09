@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "DeviceResources.h"
 #include "GameModel.h"
+#include "Registry.h"
 
 using Microsoft::WRL::ComPtr;
 
@@ -14,6 +15,7 @@ public:
     void InitDeviceDependent();
     void InitWindowSizeDependent();
 private:
+    void Init();
     void InitShaders();
     void InitBuffers();
     typedef struct {
@@ -23,6 +25,7 @@ private:
     } ConstantData;
 
     DeviceResources& m_deviceResources;
+    Registry m_Registry;
     GameModel m_GameModel;
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
     ComPtr<ID3D11VertexShader> m_pVertexShader;

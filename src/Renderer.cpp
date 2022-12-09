@@ -3,6 +3,10 @@
 #include "helper.h"
 #include "Mesh.h"
 
+void Renderer::Init(){
+    m_Registry.Init();
+}
+
 void Renderer::InitShaders() {
     auto device = m_deviceResources.GetDevice();
     auto vertexShaderData = loadBinaryFile("CubeVertexShader.cso");
@@ -53,14 +57,16 @@ void Renderer::InitShaders() {
 void Renderer::InitBuffers() {  // a mesh
     auto device = m_deviceResources.GetDevice();
 
+/*
     auto mesh {Mesh::Noise(5, 10, 30)};
     auto vertices = mesh.GetVertices();
+*/
 /*
     std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/sphere.ply");
     auto mesh = Mesh::FromStanford(data);
     auto vertices = mesh.GetVertices();
 */
-
+    auto vertices = m_Registry.Load();
     m_vertexCount = vertices.size();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
@@ -83,8 +89,8 @@ void Renderer::InitDeviceDependent() {
 }
 
 void Renderer::InitWindowSizeDependent(){
-    auto eye = DirectX::XMVectorSet(0.0f, -50.0f, -50.0f, 0.f);
-    auto at = DirectX::XMVectorSet(0.0f, -0.0f, 0.0f, 0.f);
+    auto eye = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.f);
+    auto at = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
     DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtLH(eye, at, up)));
     auto viewportSize = m_deviceResources.GetViewportSize();
@@ -96,7 +102,7 @@ void Renderer::InitWindowSizeDependent(){
 }
 
 void Renderer::Update() {
-    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(0))));
+    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(m_frameCount++))));
     if (m_frameCount == MAXUINT) {
         m_frameCount = 0;
     }

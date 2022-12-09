@@ -16,4 +16,5 @@ public:
     void Init();
     std::vector<VertexPositionNormalColor> Load();
     void Done();
+    Entry& GetEntry(std::string& key);
 };

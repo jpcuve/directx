@@ -4,7 +4,7 @@
 #include "Mesh.h"
 
 void Renderer::Init(){
-    m_Registry.Init();
+    m_registry.Init();
 }
 
 void Renderer::InitShaders() {
@@ -66,7 +66,7 @@ void Renderer::InitBuffers() {  // a mesh
     auto mesh = Mesh::FromStanford(data);
     auto vertices = mesh.GetVertices();
 */
-    auto vertices = m_Registry.Load();
+    auto vertices = m_registry.Load();
     m_vertexCount = vertices.size();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
@@ -133,7 +133,9 @@ void Renderer::Render() {
     // Output Merge stage
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
-    deviceContext->Draw(m_vertexCount, 0);
+    std::string s{"cube"};
+    auto entry = m_registry.GetEntry(s);
+    deviceContext->Draw(entry.size, entry.start);
 }
 
 

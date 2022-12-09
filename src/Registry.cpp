@@ -26,3 +26,7 @@ std::vector<VertexPositionNormalColor> Registry::Load() {
     }
     return data;
 }
+
+Entry &Registry::GetEntry(std::string &key) {
+    return m_entries[key];
+}

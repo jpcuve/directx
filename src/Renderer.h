@@ -25,8 +25,8 @@ private:
     } ConstantData;
 
     DeviceResources& m_deviceResources;
-    Registry m_Registry;
-    GameModel m_GameModel;
+    Registry m_registry;
+    GameModel m_gameModel;
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
     ComPtr<ID3D11VertexShader> m_pVertexShader;
     ComPtr<ID3D11InputLayout> m_pInputLayout;

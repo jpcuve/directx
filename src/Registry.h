@@ -5,16 +5,21 @@
 #include <vector>
 #include "Mesh.h"
 
-struct Entry {
+enum RegistryKey {
+    CUBE,
+    SHIP,
+};
+
+struct RegistryValue {
     size_t start {0};
     size_t size {0};
 };
 
 class Registry {
-    std::map<std::string, Entry> m_entries;
+    std::map<RegistryKey, RegistryValue> m_entries;
 public:
     void Init();
     std::vector<VertexPositionNormalColor> Load();
     void Done();
-    Entry& GetEntry(std::string& key);
+    RegistryValue& GetEntry(RegistryKey key);
 };

@@ -133,8 +133,7 @@ void Renderer::Render() {
     // Output Merge stage
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
-    std::string s{"cube"};
-    auto entry = m_registry.GetEntry(s);
+    auto entry = m_registry.GetEntry(RegistryKey::CUBE);
     deviceContext->Draw(entry.size, entry.start);
 }
 

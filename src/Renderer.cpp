@@ -89,16 +89,16 @@ void Renderer::InitDeviceDependent() {
 }
 
 void Renderer::InitWindowSizeDependent(){
-    auto eye = DirectX::XMVectorSet(0.0f, 0.0f, -10.0f, 0.f);
+    auto eye = DirectX::XMVectorSet(0.0f, 0.0f, 10.0f, 0.f);
     auto at = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
-    DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtLH(eye, at, up)));
+    DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
     auto viewportSize = m_deviceResources.GetViewportSize();
     float aspectRatioX = static_cast<float>(viewportSize.cx) / static_cast<float>(viewportSize.cy);
     float aspectRatioY = aspectRatioX < (16.0f / 9.0f) ? aspectRatioX / (16.0f / 9.0f) : 1.0f;  //?
     float nearPlane = 0.01f;
     float farPlane = 200.0f;
-    DirectX::XMStoreFloat4x4(&m_constantData.projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovLH(2.0f * atan(tan(DirectX::XMConvertToRadians(70) * 0.5f) / aspectRatioY), aspectRatioX, nearPlane, farPlane)));
+    DirectX::XMStoreFloat4x4(&m_constantData.projection, DirectX::XMMatrixTranspose(DirectX::XMMatrixPerspectiveFovRH(2.0f * atan(tan(DirectX::XMConvertToRadians(70) * 0.5f) / aspectRatioY), aspectRatioX, nearPlane, farPlane)));
 }
 
 void Renderer::Update() {
@@ -133,7 +133,7 @@ void Renderer::Render() {
     // Output Merge stage
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
-    auto entry = m_registry.GetEntry(RegistryKey::CUBE);
+    auto entry = m_registry.GetEntry(RegistryKey::SHIP);
     deviceContext->Draw(entry.size, entry.start);
 }
 

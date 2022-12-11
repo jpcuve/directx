@@ -20,12 +20,25 @@ std::vector<VertexPositionNormalColor> Registry::Load() {
         auto vertices { e.second.GetVertices()};
         data.insert(data.end(), vertices.begin(), vertices.end());
         RegistryValue v {pos, vertices.size()};
-        m_entries.insert({e.first, v});
+        AddEntry(e.first, v);
         pos += vertices.size();
     }
     return data;
 }
 
-RegistryValue &Registry::GetEntry(RegistryKey key) {
+RegistryValue& Registry::GetSingleEntry(RegistryKey key){
+    return GetEntry(key)[0];
+}
+
+std::vector<RegistryValue> &Registry::GetEntry(RegistryKey key) {
     return m_entries[key];
+}
+
+void Registry::AddEntry(RegistryKey key, RegistryValue value) {
+    if (!m_entries.contains(key)){
+        std::vector<RegistryValue> v;
+        m_entries.insert({key, v});
+    }
+    auto& v = m_entries[key];
+    v.push_back(value);
 }

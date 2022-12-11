@@ -16,10 +16,12 @@ struct RegistryValue {
 };
 
 class Registry {
-    std::map<RegistryKey, RegistryValue> m_entries;
+    std::map<RegistryKey, std::vector<RegistryValue>> m_entries;
 public:
     void Init();
     std::vector<VertexPositionNormalColor> Load();
     void Done();
-    RegistryValue& GetEntry(RegistryKey key);
+    void AddEntry(RegistryKey key, RegistryValue value);
+    RegistryValue& GetSingleEntry(RegistryKey key);
+    std::vector<RegistryValue>& GetEntry(RegistryKey key);
 };

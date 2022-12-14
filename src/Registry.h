@@ -8,6 +8,7 @@
 enum RegistryKey {
     CUBE,
     SHIP,
+    PLAYGROUND,
 };
 
 struct RegistryValue {

@@ -153,7 +153,7 @@ Mesh Mesh::Noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
 }
 
 
-Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2> &heights, float tileEdge) {
+Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights, float tileEdge) {
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
     std::array<byte, 4> color {0xFF, 0xFF, 0xFF, 0xFF};

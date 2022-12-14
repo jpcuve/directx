@@ -133,7 +133,7 @@ void Renderer::Render() {
     // Output Merge stage
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
-    auto entry = m_registry.GetSingleEntry(RegistryKey::SHIP);
+    auto entry = m_registry.GetSingleEntry(RegistryKey::PLAYGROUND);
     deviceContext->Draw(entry.size, entry.start);
 }
 

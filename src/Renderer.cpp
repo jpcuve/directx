@@ -89,7 +89,7 @@ void Renderer::InitDeviceDependent() {
 }
 
 void Renderer::InitWindowSizeDependent(){
-    auto eye = DirectX::XMVectorSet(0.0f, 0.0f, 10.0f, 0.f);
+    auto eye = DirectX::XMVectorSet(0.0f, 5.0f, 5.0f, 0.f);
     auto at = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
     DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
@@ -102,7 +102,9 @@ void Renderer::InitWindowSizeDependent(){
 }
 
 void Renderer::Update() {
-    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(0))));
+//    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(0))));
+    auto seconds = (m_frameCount / 60) % 5;
+    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(-static_cast<float>(seconds), 0, 0)));
     m_frameCount++;
     if (m_frameCount == MAXUINT) {
         m_frameCount = 0;

@@ -112,6 +112,7 @@ public:
     }
 };
 
+/*
 Mesh Mesh::Noise(size_t extent, float surfaceMultiplier, float heightMultiplier) {
     OpenSimplexNoise::Noise n;
     std::vector<float> heights(4 * extent * extent);
@@ -151,6 +152,7 @@ Mesh Mesh::Noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
     }
     return {vertices, triangles};
 }
+*/
 
 
 Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights, float tileEdge) {
@@ -171,6 +173,7 @@ Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights, float 
         }
         triangles.push_back(Triangle{pos, pos + 1, pos + 2});
         triangles.push_back(Triangle{pos + 2, pos + 3, pos});
+        pos += 4;
     }
     return {vertices, triangles};
 }

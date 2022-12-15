@@ -102,7 +102,8 @@ void Renderer::InitWindowSizeDependent(){
 }
 
 void Renderer::Update() {
-    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(m_frameCount++))));
+    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(0))));
+    m_frameCount++;
     if (m_frameCount == MAXUINT) {
         m_frameCount = 0;
     }
@@ -134,7 +135,8 @@ void Renderer::Render() {
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
     auto entry = m_registry.GetSingleEntry(RegistryKey::PLAYGROUND);
-    deviceContext->Draw(entry.size, entry.start);
+    auto seconds = (m_frameCount / 60) % 5;
+    deviceContext->Draw(6 * 5, entry.start + seconds * 6);
 }
 
 

@@ -66,7 +66,7 @@ void Renderer::InitBuffers() {  // a mesh
     auto mesh = Mesh::FromStanford(data);
     auto vertices = mesh.GetVertices();
 */
-    auto vertices = m_registry.Load(10, 3);
+    auto vertices = m_registry.Load();
     m_vertexCount = vertices.size();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
@@ -102,6 +102,12 @@ void Renderer::InitWindowSizeDependent(){
 }
 
 void Renderer::Update() {
+    auto surfaceExtent {DirectX::XMFLOAT2(m_registry.GetSurfaceExtent(), m_registry.GetSurfaceExtent())};
+    auto k {DirectX::XMFLOAT2(floor(m_center.x) - m_registry.GetSurfaceExtent(), floor(m_center.y) - m_registry.GetSurfaceExtent())};
+    k = {DirectX::XMFLOAT2(k.x < 0 ? k.x + m_registry.GetPlaygroundEdge() : k.x, k.y < 0 ? k.y + m_registry.GetPlaygroundEdge() : k.y)};
+    auto r {DirectX::XMFLOAT2(m_center.x - floor(m_center.x), m_center.y - floor(m_center.y))};
+
+
 //    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(0))));
     auto seconds = (m_frameCount / 60) % 5;
     DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(-static_cast<float>(seconds) / 10.0f, 0, 0)));

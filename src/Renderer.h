@@ -25,7 +25,7 @@ private:
     } ConstantData;
 
     DeviceResources& m_deviceResources;
-    Registry m_registry;
+    Registry m_registry{3, 2};
     GameModel m_gameModel;
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
     ComPtr<ID3D11VertexShader> m_pVertexShader;
@@ -35,5 +35,6 @@ private:
     UINT m_frameCount = 0;
     size_t m_vertexCount = 0;
     ConstantData m_constantData{};
+    DirectX::XMFLOAT2 m_center{0.1, 0.2};
 };
 

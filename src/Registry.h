@@ -17,10 +17,16 @@ struct RegistryValue {
 };
 
 class Registry {
+private:
     std::map<RegistryKey, std::vector<RegistryValue>> m_entries;
+    size_t m_playgroundEdge;
+    size_t m_surfaceExtent;
 public:
+    Registry(size_t playgroundEdge, size_t surfaceExtent): m_playgroundEdge(playgroundEdge), m_surfaceExtent(surfaceExtent){};
+    size_t GetPlaygroundEdge(){ return m_playgroundEdge; }
+    size_t GetSurfaceExtent(){ return m_surfaceExtent; }
     void Init();
-    std::vector<VertexPositionNormalColor> Load(size_t playgroundEdge, size_t surfaceExtent);
+    std::vector<VertexPositionNormalColor> Load();
     void Done();
     void AddEntry(RegistryKey key, RegistryValue value);
     RegistryValue& GetSingleEntry(RegistryKey key);

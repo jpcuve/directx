@@ -20,7 +20,7 @@ class Registry {
     std::map<RegistryKey, std::vector<RegistryValue>> m_entries;
 public:
     void Init();
-    std::vector<VertexPositionNormalColor> Load();
+    std::vector<VertexPositionNormalColor> Load(size_t playgroundEdge, size_t surfaceExtent);
     void Done();
     void AddEntry(RegistryKey key, RegistryValue value);
     RegistryValue& GetSingleEntry(RegistryKey key);

@@ -66,7 +66,7 @@ void Renderer::InitBuffers() {  // a mesh
     auto mesh = Mesh::FromStanford(data);
     auto vertices = mesh.GetVertices();
 */
-    auto vertices = m_registry.Load();
+    auto vertices = m_registry.Load(10, 3);
     m_vertexCount = vertices.size();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{

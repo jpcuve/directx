@@ -11,7 +11,7 @@ void Registry::Init() {
 
 }
 
-std::vector<VertexPositionNormalColor> Registry::Load() {
+std::vector<VertexPositionNormalColor> Registry::Load(size_t playgroundEdge, size_t surfaceExtent) {
     std::map<RegistryKey, Mesh> meshes {
             {RegistryKey::SHIP, Mesh::Ship()},
             {RegistryKey::CUBE, Mesh::Cube()},
@@ -25,27 +25,28 @@ std::vector<VertexPositionNormalColor> Registry::Load() {
         AddEntry(e.first, v);
         pos += vertices.size();
     }
-    // the playground, build height map
+    // the playground, build height map on height * height square
+    auto width {playgroundEdge + surfaceExtent};
+    auto height {playgroundEdge};
     OpenSimplexNoise::Noise noise;
-    size_t playgroundResolution = 20;
-    float maxHeight = 3;
-    std::vector<float> heightMap(playgroundResolution * playgroundResolution, 0.0f);
-    for (auto i = 0; i < playgroundResolution; i++){
-        auto x{static_cast<double>(i) / static_cast<double>(playgroundResolution)} ;
-        auto p1 {cos(x * 2.0 * std::numbers::pi)};
-        auto p2 {sin(x * 2.0 * std::numbers::pi)};
-        for (auto j = 0; j < playgroundResolution; j++){
-            auto y {static_cast<double>(j) / static_cast<double>(playgroundResolution)};
-            auto p3 {cos(y * 2.0 * std::numbers::pi)};
-            auto p4 {sin(y * 2.0 * std::numbers::pi)};
-            heightMap[j * playgroundResolution + i] = static_cast<float>(noise.eval(p1, p2, p3, p4)) * maxHeight;
+    std::vector<float> heightMap(height * height, 0.0f);
+    for (auto j = 0; j < height; j++){
+        auto y{static_cast<double>(j) / static_cast<double>(height)} ;
+        auto p1 {cos(y * 2.0 * std::numbers::pi)};
+        auto p2 {sin(y * 2.0 * std::numbers::pi)};
+        for (auto i = 0; i < height; i++){
+            auto x {static_cast<double>(i) / static_cast<double>(height)};
+            auto p3 {cos(x * 2.0 * std::numbers::pi)};
+            auto p4 {sin(x * 2.0 * std::numbers::pi)};
+            heightMap[j * height + i] = static_cast<float>(noise.eval(p1, p2, p3, p4));
         }
     }
-    // take strips
-    for (auto j = 0; j < playgroundResolution - 1; j++){
+    // take strips, with width
+    for (auto j = 0; j < height - 1; j++){
         std::vector<DirectX::XMFLOAT2> heightStrip;
-        for (auto i = 0; i < playgroundResolution; i++){
-            DirectX::XMFLOAT2 pair {heightMap[j * playgroundResolution + i], heightMap[(j + 1) * playgroundResolution + i]};
+        for (auto i = 0; i < width; i++){
+            auto ri {i % playgroundEdge};
+            DirectX::XMFLOAT2 pair {heightMap[j * height + ri], heightMap[(j + 1) * height + ri]};
             heightStrip.push_back(pair);
         }
         auto mesh = Mesh::FromHeightStrip(heightStrip);

@@ -26,7 +26,7 @@ std::vector<VertexPositionNormalColor> Registry::Load() {
         pos += vertices.size();
     }
     // the playground, build height map on height * height square
-    auto width {m_playgroundEdge + m_surfaceExtent};
+    auto width {m_playgroundEdge + m_surfaceExtent + 1};
     auto height {m_playgroundEdge};
     OpenSimplexNoise::Noise noise;
     std::vector<float> heightMap(height * height, 0.0f);
@@ -42,11 +42,12 @@ std::vector<VertexPositionNormalColor> Registry::Load() {
         }
     }
     // take strips, with width
-    for (auto j = 0; j < height - 1; j++){
+    for (auto j = 0; j < height; j++){
+        auto jPlusOne {(j + 1) % height};
         std::vector<DirectX::XMFLOAT2> heightStrip;
         for (auto i = 0; i < width; i++){
             auto ri {i % height};
-            DirectX::XMFLOAT2 pair {heightMap[j * height + ri], heightMap[(j + 1) * height + ri]};
+            DirectX::XMFLOAT2 pair {heightMap[j * height + ri], heightMap[jPlusOne * height + ri]};
             heightStrip.push_back(pair);
         }
         auto mesh = Mesh::FromHeightStrip(heightStrip);

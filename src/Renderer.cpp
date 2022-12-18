@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include <vector>
+#include <numbers>
 #include "helper.h"
 #include "Mesh.h"
 
@@ -89,7 +90,7 @@ void Renderer::InitDeviceDependent() {
 }
 
 void Renderer::InitWindowSizeDependent(){
-    auto eye = DirectX::XMVectorSet(0.0f, 5.0f, 5.0f, 0.f);
+    auto eye = DirectX::XMVectorSet(-1.0f, 1.0f, 5.0f, 0.f);
     auto at = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
     DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
@@ -102,16 +103,11 @@ void Renderer::InitWindowSizeDependent(){
 }
 
 void Renderer::Update() {
-    auto surfaceExtent {DirectX::XMFLOAT2(m_registry.GetSurfaceExtent(), m_registry.GetSurfaceExtent())};
-    auto k {DirectX::XMFLOAT2(floor(m_center.x) - m_registry.GetSurfaceExtent(), floor(m_center.y) - m_registry.GetSurfaceExtent())};
-    k = {DirectX::XMFLOAT2(k.x < 0 ? k.x + m_registry.GetPlaygroundEdge() : k.x, k.y < 0 ? k.y + m_registry.GetPlaygroundEdge() : k.y)};
-    auto r {DirectX::XMFLOAT2(m_center.x - floor(m_center.x), m_center.y - floor(m_center.y))};
-
-
-//    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(0))));
-    auto seconds = (m_frameCount / 60) % 5;
-    DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(-static_cast<float>(seconds) / 10.0f, 0, 0)));
     m_frameCount++;
+    auto angle {static_cast<float>(m_frameCount % 6000) / 3000.0 * std::numbers::pi};
+    auto length {2.0f};
+    m_center.x = cos(angle) * length;
+    m_center.y = sin(angle) * length;
     if (m_frameCount == MAXUINT) {
         m_frameCount = 0;
     }
@@ -122,7 +118,6 @@ void Renderer::Render() {
     auto renderTargetView = m_deviceResources.GetRenderTargetView();
     auto depthStencilView = m_deviceResources.GetDepthStencilView();
 
-    deviceContext->UpdateSubresource(m_pConstantBuffer.Get(), 0, nullptr, &m_constantData, 0, 0);
     // clear
     float blue = static_cast<float>(abs(sin(static_cast<double>(m_frameCount) * 3.141592 / 100.0)));
     D3D11_VIDEO_COLOR_RGBA color{ 0.071f, 0.04f, blue, 1.0f };
@@ -142,9 +137,23 @@ void Renderer::Render() {
     // Output Merge stage
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
-    auto entry = m_registry.GetSingleEntry(RegistryKey::PLAYGROUND);
-    auto seconds = (m_frameCount / 60) % 5;
-    deviceContext->Draw(6 * 5, entry.start + seconds * 6);
+
+    auto surfaceExtent {DirectX::XMFLOAT2(m_registry.GetSurfaceExtent(), m_registry.GetSurfaceExtent())};
+    auto k {DirectX::XMINT2(floor(m_center.x) - m_registry.GetSurfaceExtent(), floor(m_center.y) - m_registry.GetSurfaceExtent())};
+    k = {DirectX::XMINT2(k.x < 0 ? k.x + m_registry.GetPlaygroundEdge() : k.x, k.y < 0 ? k.y + m_registry.GetPlaygroundEdge() : k.y)};
+    auto r {DirectX::XMFLOAT2(m_center.x - floor(m_center.x), m_center.y - floor(m_center.y))};
+
+    auto strips = m_registry.GetEntry(RegistryKey::PLAYGROUND);
+    for (size_t i = 0; i < 2 * m_registry.GetSurfaceExtent() + 1; i++){
+        auto strip = (k.y + i) % m_registry.GetPlaygroundEdge();
+        auto entry = strips[strip];
+        auto offsetX { - static_cast<float>(k.x) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.x};
+        auto offsetY {static_cast<float>(i) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.y};
+        DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(offsetX, offsetY, 0)));
+        deviceContext->UpdateSubresource(m_pConstantBuffer.Get(), 0, nullptr, &m_constantData, 0, 0);
+        deviceContext->Draw((m_registry.GetSurfaceExtent() + 1) * 2 * 6, entry.start + static_cast<size_t>(k.x) * 6);
+    }
+    // set world before uploading constant data
 }
 
 

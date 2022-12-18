@@ -112,49 +112,6 @@ public:
     }
 };
 
-/*
-Mesh Mesh::Noise(size_t extent, float surfaceMultiplier, float heightMultiplier) {
-    OpenSimplexNoise::Noise n;
-    std::vector<float> heights(4 * extent * extent);
-    auto size {2 * extent};
-    for (auto i = 0; i < size; i++){
-        auto x{static_cast<float>(i) / static_cast<float>(size)} ;
-        auto p1 {cos(x * 2.0 * std::numbers::pi)};
-        auto p2 {sin(x * 2.0 * std::numbers::pi)};
-        for (auto j = 0; j < size; j++){
-            auto y {static_cast<float>(j) / static_cast<float>(size)};
-            auto p3 {cos(y * 2.0 * std::numbers::pi)};
-            auto p4 {sin(y * 2.0 * std::numbers::pi)};
-            heights[j * size + i] = static_cast<float>(n.eval(p1, p2, p3, p4)) * -heightMultiplier;
-        }
-    }
-    std::array<byte, 4> color {0xFF, 0xFF, 0xFF, 0xFF};
-    std::vector<VertexPositionNormalColor> vertices;
-    std::vector<Triangle> triangles;
-    unsigned int pos {0};
-    for (auto i = 0; i < size -1; i++){
-        for (auto j = 0; j < size -1; j++){
-            VertexPositionNormalColor vs[4];
-            auto x {static_cast<float>(i + 1 - extent) * surfaceMultiplier};
-            auto y {static_cast<float>(j + 1 - extent) * surfaceMultiplier};
-            vs[0].position = DirectX::XMFLOAT3{x, y, heights[j * size + i]};
-            vs[1].position = DirectX::XMFLOAT3{x + surfaceMultiplier, y, heights[j * size + i + 1]};
-            vs[2].position = DirectX::XMFLOAT3{x + surfaceMultiplier, y + surfaceMultiplier, heights[(j + 1) * size + i + 1]};
-            vs[3].position = DirectX::XMFLOAT3{x, y + surfaceMultiplier, heights[(j + 1) * size + i]};
-            for (auto& vertex: vs){
-                vertex.color = color;
-                vertices.push_back(vertex);
-            }
-            triangles.push_back(Triangle{pos, pos + 3, pos + 2});
-            triangles.push_back(Triangle{pos, pos + 2, pos + 1});
-            pos += 4;
-        }
-    }
-    return {vertices, triangles};
-}
-*/
-
-
 Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights) {
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;

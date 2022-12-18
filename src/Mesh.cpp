@@ -155,18 +155,18 @@ Mesh Mesh::Noise(size_t extent, float surfaceMultiplier, float heightMultiplier)
 */
 
 
-Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights, float tileEdge) {
+Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights) {
     std::vector<VertexPositionNormalColor> vertices;
     std::vector<Triangle> triangles;
     std::array<byte, 4> color {0xFF, 0xFF, 0xFF, 0xFF};
     UINT pos {0};
     for (auto i = 0; i < heights.size() - 1; i++){
         std::array<VertexPositionNormalColor, 4> vs;
-        float x = static_cast<float>(i) * tileEdge;
+        float x = static_cast<float>(i);
         vs[0].position = DirectX::XMFLOAT3{x, 0, heights[i].x};
-        vs[1].position = DirectX::XMFLOAT3{x, tileEdge, heights[i].y};
-        vs[2].position = DirectX::XMFLOAT3{x + tileEdge, tileEdge, heights[i + 1].y};
-        vs[3].position = DirectX::XMFLOAT3{x + tileEdge, 0, heights[i + 1].x};
+        vs[1].position = DirectX::XMFLOAT3{x, 1, heights[i].y};
+        vs[2].position = DirectX::XMFLOAT3{x + 1, 1, heights[i + 1].y};
+        vs[3].position = DirectX::XMFLOAT3{x + 1, 0, heights[i + 1].x};
         for (auto& vertex: vs){
             vertex.color = color;
             vertices.push_back(vertex);

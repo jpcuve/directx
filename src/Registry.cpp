@@ -48,7 +48,7 @@ std::vector<VertexPositionNormalColor> Registry::Load() {
             DirectX::XMFLOAT2 pair {heightMap[j * playgroundResolution + i], heightMap[(j + 1) * playgroundResolution + i]};
             heightStrip.push_back(pair);
         }
-        auto mesh = Mesh::FromHeightStrip(heightStrip, 1.0f);
+        auto mesh = Mesh::FromHeightStrip(heightStrip);
         auto vertices { mesh.GetVertices()};
         data.insert(data.end(), vertices.begin(), vertices.end());
         RegistryValue v {pos, vertices.size()};

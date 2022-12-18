@@ -24,7 +24,7 @@ public:
     static Mesh Cube();
 //    static Mesh Noise(size_t extent, float surfaceMultiplier, float heightMultiplier);
     static Mesh FromStanford(const std::vector<byte>& data);
-    static Mesh FromHeightStrip(const std::vector<DirectX::XMFLOAT2> &heights, float tileEdge);
+    static Mesh FromHeightStrip(const std::vector<DirectX::XMFLOAT2> &heights);
 private:
     std::vector<VertexPositionNormalColor> m_vertices;
     std::vector<Triangle> m_triangles;

@@ -1,5 +1,4 @@
 #include "Renderer.h"
-#include <vector>
 #include <numbers>
 #include "helper.h"
 #include "Mesh.h"
@@ -58,16 +57,6 @@ void Renderer::InitShaders() {
 
 void Renderer::InitBuffers() {  // a mesh
     auto device = m_deviceResources.GetDevice();
-
-/*
-    auto mesh {Mesh::Noise(5, 10, 30)};
-    auto vertices = mesh.GetVertices();
-*/
-/*
-    std::vector<byte> data = loadBinaryFile("c:/Users/jpc/Development/directx/src/assets/sphere.ply");
-    auto mesh = Mesh::FromStanford(data);
-    auto vertices = mesh.GetVertices();
-*/
     auto vertices = m_registry.Load();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{

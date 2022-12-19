@@ -94,7 +94,7 @@ void Renderer::InitWindowSizeDependent(){
 void Renderer::Update() {
     m_frameCount++;
     auto angle {static_cast<float>(m_frameCount % 2000) / 1000.0 * std::numbers::pi};
-    auto length {0.1f};
+    auto length {1.5f};
     m_center.x = cos(angle) * length;
     m_center.y = sin(angle) * length;
     if (m_frameCount == MAXUINT) {

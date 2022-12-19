@@ -1,6 +1,7 @@
 #include "directx.h"
 #include "Application.h"
 #include "debug.h"
+#include "helper.h"
 
 Application application;
 DebugStream dbg;
@@ -11,7 +12,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-    dbg << "Starting directx demo" << std::endl << std::flush;
+    dbg << "Starting dirctx demo" << std::endl;
+    for (int i = -10; i < 10; i++){
+        dbg << i << " " << PositiveModulo(i, 3) << std::endl;
+    }
+    dbg << std::flush;
     application.Init(hInstance, nCmdShow);
     int retVal = application.Run();
     application.Done(hInstance);

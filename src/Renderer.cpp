@@ -10,7 +10,7 @@ void Renderer::Init(){
 
 void Renderer::InitShaders() {
     auto device = m_deviceResources.GetDevice();
-    auto vertexShaderData = loadBinaryFile("CubeVertexShader.cso");
+    auto vertexShaderData = LoadBinaryFile("CubeVertexShader.cso");
     THROW_IF_FAILED(device->CreateVertexShader(
             vertexShaderData.data(),
             vertexShaderData.size(),
@@ -47,7 +47,7 @@ void Renderer::InitShaders() {
         vertexShaderData.data(),
         vertexShaderData.size(),
         &m_pInputLayout));
-    auto pixelShaderData = loadBinaryFile("CubePixelShader.cso");
+    auto pixelShaderData = LoadBinaryFile("CubePixelShader.cso");
     THROW_IF_FAILED(device->CreatePixelShader(
         pixelShaderData.data(),
         pixelShaderData.size(),
@@ -127,24 +127,27 @@ void Renderer::Render() {
     deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
     // Draw
 
-    auto surfaceExtent {DirectX::XMFLOAT2(m_registry.GetSurfaceExtent(), m_registry.GetSurfaceExtent())};
     auto k {DirectX::XMINT2(floor(m_center.x) - m_registry.GetSurfaceExtent(), floor(m_center.y) - m_registry.GetSurfaceExtent())};
-    k = {DirectX::XMINT2(k.x < 0 ? k.x + m_registry.GetPlaygroundEdge() : k.x, k.y < 0 ? k.y + m_registry.GetPlaygroundEdge() : k.y)};
+    k = {DirectX::XMINT2(PositiveModulo(k.x, m_registry.GetPlaygroundEdge()),
+                         PositiveModulo(k.y, m_registry.GetPlaygroundEdge()))};
     auto r {DirectX::XMFLOAT2(m_center.x - floor(m_center.x), m_center.y - floor(m_center.y))};
 
     auto strips = m_registry.GetEntry(RegistryKey::PLAYGROUND);
-    auto offsetX { -static_cast<float>(k.x) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.x};
+    auto offsetX { -m_center.x - static_cast<float>(m_registry.GetSurfaceExtent())};
     for (size_t i = 0; i < 2 * m_registry.GetSurfaceExtent() + 1; i++){
-        auto entry = strips[(k.y + i) % m_registry.GetPlaygroundEdge()];
+        auto strip = (k.y + i) % m_registry.GetPlaygroundEdge();
+        dbg  << "ky: " << k.y << " strip: " <<  strip << std::endl << std::flush;
+        auto entry = strips[strip];
         auto offsetY { static_cast<float>(i) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.y};
         DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(offsetX, offsetY, 0)));
         deviceContext->UpdateSubresource(m_pConstantBuffer.Get(), 0, nullptr, &m_constantData, 0, 0);
         auto tileCount {m_registry.GetSurfaceExtent() * 2 + 1};
         // auto tileStart {static_cast<size_t>(k.x)};
         auto tileStart {0};
-        dbg << "tile start: " << tileStart << std::endl << std::flush;
+        // dbg << "tile start: " << tileStart << std::endl << std::flush;
         deviceContext->Draw(tileCount * 6,  entry.start + tileStart * 6);
     }
+    dbg << std::endl << std::flush;
     // set world before uploading constant data
 }
 

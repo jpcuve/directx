@@ -85,7 +85,7 @@ void StanfordParser::Parse(StanfordHandler& handler) {
             if (bracket != std::string::npos){
                 line = std::string_view(reinterpret_cast<const char *>(&m_data[m_position]), bracket);
             }
-            auto tokens = split(line, ' ');
+            auto tokens = Split(line, ' ');
             if (tokens.empty()){
                 throw parse_exception();
             } else {

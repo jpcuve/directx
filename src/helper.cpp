@@ -1,7 +1,7 @@
 #include "helper.h"
 #include <fstream>
 
-std::vector<byte> loadBinaryFile(const std::string& fileName) {
+std::vector<byte> LoadBinaryFile(const std::string& fileName) {
     std::vector<byte> buffer {};
     std::fstream f{fileName, std::ios::in|std::ios::binary};
     constexpr std::streamsize count = 32768;
@@ -22,7 +22,7 @@ std::vector<byte> loadBinaryFile(const std::string& fileName) {
     }
 }
 
-std::vector<std::string_view> split(std::string_view& s, char delimiter){
+std::vector<std::string_view> Split(std::string_view& s, char delimiter){
     std::vector<std::string_view> retVal {};
     if (!s.empty()){
         size_t init {s.find_first_not_of(delimiter)};
@@ -36,5 +36,9 @@ std::vector<std::string_view> split(std::string_view& s, char delimiter){
         }
     }
     return retVal;
+}
+
+int PositiveModulo(int i, int n){
+    return (i % n + n) % n;
 }
 

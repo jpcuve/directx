@@ -26,7 +26,7 @@ std::vector<VertexPositionNormalColor> Registry::Load() {
         pos += vertices.size();
     }
     // the playground, build height map on height * height square
-    auto width {m_playgroundEdge + m_surfaceExtent + 1};
+    auto width {m_playgroundEdge + m_surfaceExtent + 2};
     auto height {m_playgroundEdge};
     OpenSimplexNoise::Noise noise;
     std::vector<float> heightMap(height * height, 0.0f);

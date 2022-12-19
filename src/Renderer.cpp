@@ -94,7 +94,7 @@ void Renderer::InitWindowSizeDependent(){
 void Renderer::Update() {
     m_frameCount++;
     auto angle {static_cast<float>(m_frameCount % 2000) / 1000.0 * std::numbers::pi};
-    auto length {2.0f};
+    auto length {0.1f};
     m_center.x = cos(angle) * length;
     m_center.y = sin(angle) * length;
     if (m_frameCount == MAXUINT) {
@@ -133,19 +133,19 @@ void Renderer::Render() {
     auto r {DirectX::XMFLOAT2(m_center.x - floor(m_center.x), m_center.y - floor(m_center.y))};
 
     auto strips = m_registry.GetEntry(RegistryKey::PLAYGROUND);
-    auto offsetX { -m_center.x - static_cast<float>(m_registry.GetSurfaceExtent())};
+    auto tileStart {static_cast<size_t>(k.x)};
+    dbg << "tile start: " << tileStart << std::endl << std::flush;
+    auto offsetX { -m_center.x - static_cast<float>(m_registry.GetSurfaceExtent()) - static_cast<float>(m_registry.GetSurfaceExtent())};
     for (size_t i = 0; i < 2 * m_registry.GetSurfaceExtent() + 1; i++){
         auto strip = (k.y + i) % m_registry.GetPlaygroundEdge();
-        dbg  << "ky: " << k.y << " strip: " <<  strip << std::endl << std::flush;
+        // dbg  << "ky: " << k.y << " strip: " <<  strip << std::endl << std::flush;
         auto entry = strips[strip];
         auto offsetY { static_cast<float>(i) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.y};
         DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(offsetX, offsetY, 0)));
         deviceContext->UpdateSubresource(m_pConstantBuffer.Get(), 0, nullptr, &m_constantData, 0, 0);
         auto tileCount {m_registry.GetSurfaceExtent() * 2 + 1};
-        // auto tileStart {static_cast<size_t>(k.x)};
-        auto tileStart {0};
-        // dbg << "tile start: " << tileStart << std::endl << std::flush;
-        deviceContext->Draw(tileCount * 6,  entry.start + tileStart * 6);
+        // auto tileStart {};
+        deviceContext->Draw(tileCount * 6,  entry.start + 12);
     }
     dbg << std::endl << std::flush;
     // set world before uploading constant data

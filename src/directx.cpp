@@ -1,7 +1,6 @@
 #include "directx.h"
 #include "Application.h"
 #include "debug.h"
-#include "GameModel.h"
 
 Application application;
 DebugStream dbg;
@@ -13,10 +12,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
     dbg << "Starting directx demo" << std::endl << std::flush;
-    GameModel gameModel;
-    auto position {DirectX::XMFLOAT2{43, 19}};
-    auto map {gameModel.LocalMap(position)};
-    dbg << std::flush;
     application.Init(hInstance, nCmdShow);
     int retVal = application.Run();
     application.Done(hInstance);

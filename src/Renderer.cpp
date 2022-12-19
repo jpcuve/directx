@@ -3,6 +3,7 @@
 #include <numbers>
 #include "helper.h"
 #include "Mesh.h"
+#include "debug.h"
 
 void Renderer::Init(){
     m_registry.Init();
@@ -104,7 +105,7 @@ void Renderer::InitWindowSizeDependent(){
 
 void Renderer::Update() {
     m_frameCount++;
-    auto angle {static_cast<float>(m_frameCount % 6000) / 3000.0 * std::numbers::pi};
+    auto angle {static_cast<float>(m_frameCount % 2000) / 1000.0 * std::numbers::pi};
     auto length {2.0f};
     m_center.x = cos(angle) * length;
     m_center.y = sin(angle) * length;
@@ -144,14 +145,17 @@ void Renderer::Render() {
     auto r {DirectX::XMFLOAT2(m_center.x - floor(m_center.x), m_center.y - floor(m_center.y))};
 
     auto strips = m_registry.GetEntry(RegistryKey::PLAYGROUND);
+    auto offsetX { -static_cast<float>(k.x) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.x};
     for (size_t i = 0; i < 2 * m_registry.GetSurfaceExtent() + 1; i++){
-        auto strip = (k.y + i) % m_registry.GetPlaygroundEdge();
-        auto entry = strips[strip];
-        auto offsetX { - static_cast<float>(k.x) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.x};
-        auto offsetY {static_cast<float>(i) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.y};
+        auto entry = strips[(k.y + i) % m_registry.GetPlaygroundEdge()];
+        auto offsetY { static_cast<float>(i) - static_cast<float>(m_registry.GetSurfaceExtent()) - r.y};
         DirectX::XMStoreFloat4x4(&m_constantData.world, DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(offsetX, offsetY, 0)));
         deviceContext->UpdateSubresource(m_pConstantBuffer.Get(), 0, nullptr, &m_constantData, 0, 0);
-        deviceContext->Draw((m_registry.GetSurfaceExtent() + 1) * 2 * 6, entry.start + static_cast<size_t>(k.x) * 6);
+        auto tileCount {m_registry.GetSurfaceExtent() * 2 + 1};
+        // auto tileStart {static_cast<size_t>(k.x)};
+        auto tileStart {0};
+        dbg << "tile start: " << tileStart << std::endl << std::flush;
+        deviceContext->Draw(tileCount * 6,  entry.start + tileStart * 6);
     }
     // set world before uploading constant data
 }

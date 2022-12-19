@@ -1,7 +1,6 @@
 #pragma once
 #include "stdafx.h"
 #include "DeviceResources.h"
-#include "GameModel.h"
 #include "Registry.h"
 
 using Microsoft::WRL::ComPtr;
@@ -26,7 +25,6 @@ private:
 
     DeviceResources& m_deviceResources;
     Registry m_registry{3, 2};
-    GameModel m_gameModel;
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
     ComPtr<ID3D11VertexShader> m_pVertexShader;
     ComPtr<ID3D11InputLayout> m_pInputLayout;

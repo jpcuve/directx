@@ -51,7 +51,7 @@ add_executable(${PROJECT_NAME} WIN32
         src/Renderer.h
         src/Timer.cpp
         src/Timer.h
-        src/StanfordParser.cpp src/StanfordParser.h src/helper.cpp src/Mesh.cpp src/Mesh.h src/OpenSimplexNoise.cpp src/OpenSimplexNoise.h src/GameModel.cpp src/GameModel.h src/Registry.cpp src/Registry.h)
+        src/StanfordParser.cpp src/StanfordParser.h src/helper.cpp src/Mesh.cpp src/Mesh.h src/OpenSimplexNoise.cpp src/OpenSimplexNoise.h src/Registry.cpp src/Registry.h)
 
 add_dependencies(${PROJECT_NAME} shaders)
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/stdafx.h)

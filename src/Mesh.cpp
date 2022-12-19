@@ -117,20 +117,21 @@ Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights) {
     std::vector<Triangle> triangles;
     std::array<byte, 4> color {0xFF, 0xFF, 0xFF, 0xFF};
     UINT pos {0};
-    for (auto i = 0; i < heights.size() - 1; i++){
+    for (auto i = 0; i < heights.size(); i++){
+        auto iPlusOne {(i + 1) % heights.size()};
         std::array<VertexPositionNormalColor, 4> vs;
         float x = static_cast<float>(i);
         vs[0].position = DirectX::XMFLOAT3{x, 0, heights[i].x};
         vs[1].position = DirectX::XMFLOAT3{x, 1, heights[i].y};
-        vs[2].position = DirectX::XMFLOAT3{x + 1, 1, heights[i + 1].y};
-        vs[3].position = DirectX::XMFLOAT3{x + 1, 0, heights[i + 1].x};
+        vs[2].position = DirectX::XMFLOAT3{x + 1, 1, heights[iPlusOne].y};
+        vs[3].position = DirectX::XMFLOAT3{x + 1, 0, heights[iPlusOne].x};
         for (auto& vertex: vs){
             vertex.color = color;
             vertices.push_back(vertex);
         }
         triangles.push_back(Triangle{pos, pos + 1, pos + 2});
         triangles.push_back(Triangle{pos + 2, pos + 3, pos});
-        pos += 4;
+        pos += vs.size();
     }
     return {vertices, triangles};
 }

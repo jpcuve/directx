@@ -7,9 +7,6 @@
 #include <stdexcept>
 #include <vcruntime_string.h>
 #include "OpenSimplexNoise.h"
-#include <numbers>
-#include <algorithm>
-#include <stdexcept>
 
 std::vector<VertexPositionNormalColor> Mesh::GetVertices() {
     std::vector<VertexPositionNormalColor> buffer;

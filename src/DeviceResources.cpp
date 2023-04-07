@@ -50,26 +50,6 @@ void DeviceResources::InitWindowResources(HWND hWnd) {
             TRUE,
             DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL,
     };
-    DXGI_SWAP_CHAIN_DESC sd{
-        .BufferDesc {
-            .Width = static_cast<UINT>(width),
-            .Height = static_cast<UINT>(height),
-            .RefreshRate{
-                .Numerator = 60,
-                .Denominator = 1,
-            },
-            .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
-        },
-        .SampleDesc {  // anti-aliasing setting
-            .Count = 1,
-            .Quality = 0,  // vendor specific
-        },
-        .BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
-        .BufferCount = 2,
-        .OutputWindow = hWnd,
-        .Windowed = TRUE,
-        .SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL,
-    };
     ComPtr<IDXGIDevice3> dxgiDevice;
     m_pDevice.As(&dxgiDevice);
     ComPtr<IDXGIAdapter> adapter;
@@ -86,33 +66,33 @@ void DeviceResources::SetUp() {
     D3D11_TEXTURE2D_DESC backBufferDesc;
     m_pBackBuffer->GetDesc(&backBufferDesc);
     m_viewportSize = {
-        .cx = static_cast<LONG>(backBufferDesc.Width),
-        .cy = static_cast<LONG>(backBufferDesc.Height)
+        static_cast<LONG>(backBufferDesc.Width),
+        static_cast<LONG>(backBufferDesc.Height)
     };
     D3D11_TEXTURE2D_DESC depthStencilDesc{
-        .Width = backBufferDesc.Width,
-        .Height = backBufferDesc.Height,
-        .MipLevels = 1,
-        .ArraySize = 1,
-        .Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
-        .SampleDesc {  // same as swap chain
-            .Count = 1,
-            .Quality = 0,
+        static_cast<UINT>(backBufferDesc.Width),
+        static_cast<UINT>(backBufferDesc.Height),
+        1,
+        1,
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+        {  // same as swap chain
+            1,
+            0,
         },
-        .Usage = D3D11_USAGE_DEFAULT,
-        .BindFlags = D3D11_BIND_DEPTH_STENCIL,
-        .CPUAccessFlags = 0,
-        .MiscFlags = 0,
+        D3D11_USAGE_DEFAULT,
+        D3D11_BIND_DEPTH_STENCIL,
+        0,
+        0,
     };
     THROW_IF_FAILED(m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &m_pDepthStencil));
     THROW_IF_FAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencil.Get(), nullptr, &m_pDepthStencilView));
     D3D11_VIEWPORT vp{
-        .TopLeftX = 0.0f,
-        .TopLeftY = 0.0f,
-        .Width = static_cast<float>(backBufferDesc.Width),
-        .Height = static_cast<float>(backBufferDesc.Height),
-        .MinDepth = 0.0f,
-        .MaxDepth = 1.0f,
+        0.0f,
+        0.0f,
+        static_cast<float>(backBufferDesc.Width),
+        static_cast<float>(backBufferDesc.Height),
+        0.0f,
+        1.0f,
     };
     m_pDeviceContext->RSSetViewports(1, &vp);
     m_pDeviceContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), nullptr);

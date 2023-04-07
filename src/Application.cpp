@@ -2,19 +2,19 @@
 #include <stdexcept>
 
 void Application::Init(HINSTANCE hInstance, int nCmdShow) {
-	WNDCLASSEXW wcex{
-		.cbSize = sizeof(WNDCLASSEXW),
-		.style = CS_HREDRAW | CS_VREDRAW,
-		.lpfnWndProc = WndProc,
-		.cbClsExtra = 0,
-		.cbWndExtra = 0,
-		.hInstance = hInstance,
-		.hIcon = NULL,
-		.hCursor = LoadCursor(nullptr, IDC_ARROW),
-		.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH),
-		.lpszMenuName = nullptr,
-		.lpszClassName = m_windowClassName,
-		.hIconSm = NULL,
+	WNDCLASSEXW wcex {
+		sizeof(WNDCLASSEXW),
+		CS_HREDRAW | CS_VREDRAW,
+		WndProc,
+		0,
+		0,
+		hInstance,
+        nullptr,
+		LoadCursor(nullptr, IDC_ARROW),
+		static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
+		nullptr,
+		m_windowClassName,
+        nullptr,
 	};
 	if (!RegisterClassExW(&wcex)) {
 		throw std::runtime_error("Cannot register window class");

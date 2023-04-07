@@ -24,12 +24,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-    switch (message) {
-    case WM_DESTROY:
+    if (message == WM_DESTROY){
         PostQuitMessage(0);
-        break;
-    default:
-        return application.InstanceWndProc(hWnd, message, wParam, lParam);
+        return 0;
     }
-    return 0;
+    return application.InstanceWndProc(hWnd, message, wParam, lParam);
 }

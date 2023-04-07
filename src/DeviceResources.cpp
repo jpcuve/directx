@@ -19,7 +19,7 @@ void DeviceResources::InitDeviceResources() {
     THROW_IF_FAILED(D3D11CreateDevice(
         nullptr,                    // Specify nullptr to use the default adapter.
         D3D_DRIVER_TYPE_HARDWARE,   // Create a device using the hardware graphics driver.
-        0,                          // Should be 0 unless the driver is D3D_DRIVER_TYPE_SOFTWARE.
+        nullptr,                          // Should be 0 unless the driver is D3D_DRIVER_TYPE_SOFTWARE.
         deviceFlags,                // Set debug and Direct2D compatibility flags.
         levels,                     // List of feature levels this app can support.
         ARRAYSIZE(levels),          // Size of the list above.
@@ -36,6 +36,20 @@ void DeviceResources::InitWindowResources(HWND hWnd) {
     auto width = rect.right - rect.left;
     auto height = rect.bottom - rect.top;
     // TODO make sure this really will be a flip model
+    DXGI_SWAP_CHAIN_DESC swapChainDescription {
+            {
+                static_cast<UINT>(width),
+                static_cast<UINT>(height),
+                {60, 1},
+                DXGI_FORMAT_R8G8B8A8_UNORM,
+            },
+            {1, 0},
+            DXGI_USAGE_RENDER_TARGET_OUTPUT,
+            2,
+            hWnd,
+            TRUE,
+            DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL,
+    };
     DXGI_SWAP_CHAIN_DESC sd{
         .BufferDesc {
             .Width = static_cast<UINT>(width),
@@ -62,7 +76,7 @@ void DeviceResources::InitWindowResources(HWND hWnd) {
     ComPtr<IDXGIFactory> factory;
     THROW_IF_FAILED(dxgiDevice->GetAdapter(&adapter));
     THROW_IF_FAILED(adapter->GetParent(IID_PPV_ARGS(&factory)));
-    THROW_IF_FAILED(factory->CreateSwapChain(m_pDevice.Get(), &sd, &m_pSwapChain));
+    THROW_IF_FAILED(factory->CreateSwapChain(m_pDevice.Get(), &swapChainDescription, &m_pSwapChain));
     SetUp();
 }
 

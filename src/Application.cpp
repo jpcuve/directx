@@ -1,46 +1,50 @@
 #include "Application.h"
 #include <stdexcept>
 
-void Application::Init(HINSTANCE hInstance, int nCmdShow) {
-	WNDCLASSEXW wcex {
-		sizeof(WNDCLASSEXW),
-		CS_HREDRAW | CS_VREDRAW,
-		WndProc,
-		0,
-		0,
-		hInstance,
-        nullptr,
-		LoadCursor(nullptr, IDC_ARROW),
-		static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
-		nullptr,
-		m_windowClassName,
-        nullptr,
-	};
-	if (!RegisterClassExW(&wcex)) {
-		throw std::runtime_error("Cannot register window class");
-	}
-	auto screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	auto screenHeight = GetSystemMetrics(SM_CYSCREEN);
-	HWND hWnd = CreateWindowW(
-		m_windowClassName,
-		m_windowTitle,
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
-		(screenWidth - m_windowWidth) / 2,
-		(screenHeight - m_windowHeight) / 2,
-		m_windowWidth,
-		m_windowHeight,
-		nullptr,
-		nullptr,
-		hInstance,
-		nullptr);
-	if (!hWnd) {
-		throw std::runtime_error("Cannot create window");
-	}
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
-	m_deviceResources.Init(hWnd);
-	m_renderer.InitDeviceDependent();
-	m_renderer.InitWindowSizeDependent();
+Application::Application(HINSTANCE hInst, int nCmdShow): hInstance(hInst) {
+    WNDCLASSEXW wcex {
+            sizeof(WNDCLASSEXW),
+            CS_HREDRAW | CS_VREDRAW,
+            WndProc,
+            0,
+            0,
+            hInstance,
+            nullptr,
+            LoadCursor(nullptr, IDC_ARROW),
+            static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)),
+            nullptr,
+            m_windowClassName,
+            nullptr,
+    };
+    if (!RegisterClassExW(&wcex)) {
+        throw std::runtime_error("Cannot register window class");
+    }
+    auto screenWidth = GetSystemMetrics(SM_CXSCREEN);
+    auto screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    HWND hWnd = CreateWindowW(
+            m_windowClassName,
+            m_windowTitle,
+            WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+            (screenWidth - m_windowWidth) / 2,
+            (screenHeight - m_windowHeight) / 2,
+            m_windowWidth,
+            m_windowHeight,
+            nullptr,
+            nullptr,
+            hInstance,
+            nullptr);
+    if (!hWnd) {
+        throw std::runtime_error("Cannot create window");
+    }
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+    m_deviceResources.Init(hWnd);
+    m_renderer.InitDeviceDependent();
+    m_renderer.InitWindowSizeDependent();
+}
+
+Application::~Application() {
+    UnregisterClassW(m_windowClassName, hInstance);
 }
 
 int Application::Run(){
@@ -57,13 +61,10 @@ int Application::Run(){
 		m_deviceResources.Present();
 		done = msg.message == WM_QUIT;
 	}
-	return (int)msg.wParam;
-}
-
-void Application::Done(HINSTANCE hInstance) {
-	UnregisterClassW(m_windowClassName, hInstance);
+	return static_cast<int>(msg.wParam);
 }
 
 LRESULT Application::InstanceWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     return DefWindowProcW(hWnd, message, wParam, lParam);
 }
+

@@ -1,10 +1,13 @@
 #include "directx.h"
+
+#include <memory>
 #include "Application.h"
 #include "debug.h"
 #include "helper.h"
 
-Application application;
 DebugStream dbg;
+
+std::unique_ptr<Application> app;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -12,15 +15,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow) {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-    dbg << "Starting dirctx demo" << std::endl;
+    dbg << "Starting directx demo" << std::endl;
     for (int i = -10; i < 10; i++){
         dbg << i << " " << PositiveModulo(i, 3) << std::endl;
     }
     dbg << std::flush;
-    application.Init(hInstance, nCmdShow);
-    int retVal = application.Run();
-    application.Done(hInstance);
-    return retVal;
+    app = std::make_unique<Application>(hInstance, nCmdShow);
+    return app->Run();
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -28,5 +29,5 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
         PostQuitMessage(0);
         return 0;
     }
-    return application.InstanceWndProc(hWnd, message, wParam, lParam);
+    return app->InstanceWndProc(hWnd, message, wParam, lParam);
 }

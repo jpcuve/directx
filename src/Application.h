@@ -1,4 +1,6 @@
 #pragma once
+
+#include <memory>
 #include "stdafx.h"
 #include "DeviceResources.h"
 #include "Renderer.h"
@@ -12,8 +14,10 @@ private:
 	LPCWSTR m_windowTitle {L"DirectX"};
 	int m_windowWidth {768};
 	int m_windowHeight {768};
-	DeviceResources m_deviceResources;
-	Renderer m_renderer{ m_deviceResources };
+    std::unique_ptr<DeviceResources> m_pDeviceResources;
+    std::unique_ptr<Renderer> m_pRenderer;
+	// DeviceResources m_deviceResources;
+	// Renderer m_renderer{ m_deviceResources };
 public:
     Application(HINSTANCE hInst, int nCmdShow);
     ~Application();

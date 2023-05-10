@@ -38,9 +38,11 @@ Application::Application(HINSTANCE hInst, int nCmdShow): hInstance(hInst) {
     }
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
-    m_deviceResources.Init(hWnd);
-    m_renderer.InitDeviceDependent();
-    m_renderer.InitWindowSizeDependent();
+    m_pDeviceResources = std::make_unique<DeviceResources>();
+    m_pDeviceResources->Init(hWnd);
+    m_pRenderer = std::make_unique<Renderer>(*m_pDeviceResources);
+    m_pRenderer->InitDeviceDependent();
+    m_pRenderer->InitWindowSizeDependent();
 }
 
 Application::~Application() {
@@ -56,9 +58,9 @@ int Application::Run(){
 			DispatchMessage(&msg);
 		}
 		// render frame
-		m_renderer.Update();
-		m_renderer.Render();
-		m_deviceResources.Present();
+		m_pRenderer->Update();
+		m_pRenderer->Render();
+		m_pDeviceResources->Present();
 		done = msg.message == WM_QUIT;
 	}
 	return static_cast<int>(msg.wParam);

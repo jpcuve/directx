@@ -40,8 +40,6 @@ Application::Application(HINSTANCE hInst, int nCmdShow): hInstance(hInst) {
     UpdateWindow(hWnd);
     m_pDeviceResources = std::make_unique<DeviceResources>(hWnd);
     m_pRenderer = std::make_unique<Renderer>(m_pDeviceResources);
-    m_pRenderer->InitDeviceDependent();
-    m_pRenderer->InitWindowSizeDependent();
 }
 
 Application::~Application() {

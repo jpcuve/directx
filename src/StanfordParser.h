@@ -40,7 +40,7 @@ class DefaultStanfordHandler: public StanfordHandler {
 
 class StanfordParser {
 public:
-    StanfordParser(const std::vector<byte>& d): m_data{d}{};
+    explicit StanfordParser(const std::vector<byte>& d): m_data{d}{};
     void Parse(StanfordHandler& handler);
 private:
     const std::vector<byte>& m_data;

@@ -11,13 +11,12 @@ using Microsoft::WRL::ComPtr;
 
 class Renderer{
 public:
-    explicit Renderer(std::shared_ptr<DeviceResources> dr) : m_pDeviceResources{std::move( dr )} {}
+    explicit Renderer(std::shared_ptr<DeviceResources> dr);
 	void Update();
 	void Render();
     void InitDeviceDependent();
     void InitWindowSizeDependent();
 private:
-    void Init();
     void InitShaders();
     void InitBuffers();
     typedef struct {

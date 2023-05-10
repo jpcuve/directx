@@ -4,6 +4,11 @@
 #include "Mesh.h"
 #include "debug.h"
 
+Renderer::Renderer(std::shared_ptr<DeviceResources> dr) : m_pDeviceResources{std::move( dr )} {
+    InitDeviceDependent();
+    InitWindowSizeDependent();
+}
+
 void Renderer::InitShaders() {
     auto device = m_pDeviceResources->GetDevice();
     auto vertexShaderData = LoadBinaryFile("CubeVertexShader.cso");
@@ -49,7 +54,6 @@ void Renderer::InitShaders() {
         pixelShaderData.size(),
         nullptr,
         &m_pPixelShader));
-    m_registry.Init();
 }
 
 void Renderer::InitBuffers() {  // a mesh

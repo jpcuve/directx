@@ -7,9 +7,8 @@
 #include "Mesh.h"
 #include "OpenSimplexNoise.h"
 
-void Registry::Init() {
 
-}
+Registry::Registry(size_t playgroundEdge, size_t surfaceExtent): m_playgroundEdge(playgroundEdge), m_surfaceExtent(surfaceExtent){};
 
 std::vector<VertexPositionNormalColor> Registry::Load() {
     std::map<RegistryKey, Mesh> meshes {

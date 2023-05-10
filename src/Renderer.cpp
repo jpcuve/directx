@@ -4,12 +4,8 @@
 #include "Mesh.h"
 #include "debug.h"
 
-void Renderer::Init(){
-    m_registry.Init();
-}
-
 void Renderer::InitShaders() {
-    auto device = m_deviceResources.GetDevice();
+    auto device = m_pDeviceResources->GetDevice();
     auto vertexShaderData = LoadBinaryFile("CubeVertexShader.cso");
     THROW_IF_FAILED(device->CreateVertexShader(
             vertexShaderData.data(),
@@ -53,10 +49,11 @@ void Renderer::InitShaders() {
         pixelShaderData.size(),
         nullptr,
         &m_pPixelShader));
+    m_registry.Init();
 }
 
 void Renderer::InitBuffers() {  // a mesh
-    auto device = m_deviceResources.GetDevice();
+    auto device = m_pDeviceResources->GetDevice();
     auto vertices = m_registry.Load();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
@@ -83,7 +80,7 @@ void Renderer::InitWindowSizeDependent(){
     auto at = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.f);
     auto up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.f);
     DirectX::XMStoreFloat4x4(&m_constantData.view, DirectX::XMMatrixTranspose(DirectX::XMMatrixLookAtRH(eye, at, up)));
-    auto viewportSize = m_deviceResources.GetViewportSize();
+    auto viewportSize = m_pDeviceResources->GetViewportSize();
     float aspectRatioX = static_cast<float>(viewportSize.cx) / static_cast<float>(viewportSize.cy);
     float aspectRatioY = aspectRatioX < (16.0f / 9.0f) ? aspectRatioX / (16.0f / 9.0f) : 1.0f;  //?
     float nearPlane = 0.01f;
@@ -103,9 +100,9 @@ void Renderer::Update() {
 }
 
 void Renderer::Render() {
-    auto deviceContext = m_deviceResources.GetDeviceContext();
-    auto renderTargetView = m_deviceResources.GetRenderTargetView();
-    auto depthStencilView = m_deviceResources.GetDepthStencilView();
+    auto deviceContext = m_pDeviceResources->GetDeviceContext();
+    auto renderTargetView = m_pDeviceResources->GetRenderTargetView();
+    auto depthStencilView = m_pDeviceResources->GetDepthStencilView();
 
     // clear
     float blue = static_cast<float>(abs(sin(static_cast<double>(m_frameCount) * 3.141592 / 100.0)));

@@ -14,7 +14,7 @@ private:
 	LPCWSTR m_windowTitle {L"DirectX"};
 	int m_windowWidth {768};
 	int m_windowHeight {768};
-    std::unique_ptr<DeviceResources> m_pDeviceResources;
+    std::shared_ptr<DeviceResources> m_pDeviceResources;
     std::unique_ptr<Renderer> m_pRenderer;
 	// DeviceResources m_deviceResources;
 	// Renderer m_renderer{ m_deviceResources };

@@ -4,7 +4,7 @@
 #include "Mesh.h"
 #include "debug.h"
 
-Renderer::Renderer(std::shared_ptr<DeviceResources> dr) : m_pDeviceResources{std::move( dr )} {
+Renderer::Renderer(const std::unique_ptr<DeviceResources>& dr) : m_pDeviceResources{dr} {
     InitDeviceDependent();
     InitWindowSizeDependent();
 }

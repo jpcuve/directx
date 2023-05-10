@@ -11,7 +11,7 @@ using Microsoft::WRL::ComPtr;
 
 class Renderer{
 public:
-    explicit Renderer(std::shared_ptr<DeviceResources> dr);
+    explicit Renderer(const std::unique_ptr<DeviceResources>& dr);
 	void Update();
 	void Render();
     void InitDeviceDependent();
@@ -25,7 +25,7 @@ private:
         DirectX::XMFLOAT4X4 projection;
     } ConstantData;
 
-    std::shared_ptr<DeviceResources> m_pDeviceResources;
+    const std::unique_ptr<DeviceResources>& m_pDeviceResources;
     Registry m_registry{3, 2};
     ComPtr<ID3D11Buffer> m_pVertexBuffer;
     ComPtr<ID3D11VertexShader> m_pVertexShader;

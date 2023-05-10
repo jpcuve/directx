@@ -5,7 +5,7 @@ using Microsoft::WRL::ComPtr;
 
 class DeviceResources {
 private:
-	D3D_FEATURE_LEVEL m_featureLevel;
+	D3D_FEATURE_LEVEL m_featureLevel {D3D_FEATURE_LEVEL_1_0_CORE};
 	ComPtr<ID3D11Device> m_pDevice;
 	ComPtr<ID3D11DeviceContext> m_pDeviceContext;
 	ComPtr<IDXGISwapChain> m_pSwapChain;
@@ -20,7 +20,7 @@ private:
 	void SetUp();
 	void TearDown();
 public:
-	void Init(HWND hWnd);
+    explicit DeviceResources(HWND hWnd);
 	void Present();
 	ID3D11Device* GetDevice() { return m_pDevice.Get(); };
 	ID3D11DeviceContext* GetDeviceContext() { return m_pDeviceContext.Get(); };

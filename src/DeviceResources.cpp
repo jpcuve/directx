@@ -1,6 +1,11 @@
 #include "DeviceResources.h"
 #include "helper.h"
 
+DeviceResources::DeviceResources(HWND hWnd) {
+    InitDeviceResources();
+    InitWindowResources(hWnd);
+}
+
 void DeviceResources::InitDeviceResources() {
     D3D_FEATURE_LEVEL levels[] = {
         D3D_FEATURE_LEVEL_9_1,
@@ -106,11 +111,7 @@ void DeviceResources::TearDown() {
     m_pDeviceContext->Flush();
 }
 
-void DeviceResources::Init(HWND hWnd) {
-    InitDeviceResources();
-    InitWindowResources(hWnd);
-}
-
 void DeviceResources::Present() {
     THROW_IF_FAILED(m_pSwapChain->Present(1, 0));
 }
+

@@ -4,7 +4,13 @@
 DeviceResources::DeviceResources(HWND hWnd) {
     InitDeviceResources();
     InitWindowResources(hWnd);
+    SetUp();
 }
+
+DeviceResources::~DeviceResources() {
+    TearDown();
+}
+
 
 void DeviceResources::InitDeviceResources() {
     D3D_FEATURE_LEVEL levels[] = {
@@ -62,7 +68,6 @@ void DeviceResources::InitWindowResources(HWND hWnd) {
     THROW_IF_FAILED(dxgiDevice->GetAdapter(&adapter));
     THROW_IF_FAILED(adapter->GetParent(IID_PPV_ARGS(&factory)));
     THROW_IF_FAILED(factory->CreateSwapChain(m_pDevice.Get(), &swapChainDescription, &m_pSwapChain));
-    SetUp();
 }
 
 void DeviceResources::SetUp() {

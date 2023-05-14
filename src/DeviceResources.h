@@ -21,6 +21,7 @@ private:
 	void TearDown();
 public:
     explicit DeviceResources(HWND hWnd);
+    ~DeviceResources();
 	void Present();
 	ID3D11Device* GetDevice() { return m_pDevice.Get(); };
 	ID3D11DeviceContext* GetDeviceContext() { return m_pDeviceContext.Get(); };

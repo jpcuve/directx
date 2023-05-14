@@ -20,6 +20,10 @@ private:
 	// Renderer m_renderer{ m_deviceResources };
 public:
     Application(HINSTANCE hInst, int nCmdShow);
+    Application(const Application& instance) = delete;
+    Application& operator=(const Application& instance) = delete;
+    Application(Application &&a) noexcept ;
+    Application &operator=(Application &&a) noexcept ;
     ~Application();
 	int Run();
 	LRESULT CALLBACK InstanceWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

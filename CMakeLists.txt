@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 20)
 include_directories(./src)
 
 set (WINDOWS_KIT "C:/Program Files (x86)/Windows Kits/10")
-set (WINDOWS_VERSION 10.0.22000.0)
+set (WINDOWS_SDK_VERSION 10.0.22621.0)
 set (WINDOWS_ARCHITECTURE x64)
-link_directories("${WINDOWS_KIT}/Lib/${WINDOWS_VERSION}/um/${WINDOWS_ARCHITECTURE}")
+link_directories("${WINDOWS_KIT}/Lib/${WINDOWS_SDK_VERSION}/um/${WINDOWS_ARCHITECTURE}")
 
 find_library(D3D11 d3d11.lib)
 find_library(DXGI dxgi.lib)
@@ -27,7 +27,7 @@ foreach(FILE ${HLSL_SHADER_FILES})
     get_source_file_property(model ${FILE} ShaderModel)
     add_custom_command(
             TARGET shaders
-            COMMAND "${WINDOWS_KIT}/bin/${WINDOWS_VERSION}/${WINDOWS_ARCHITECTURE}/fxc.exe" /nologo /Emain /T${type}_${model} $<IF:$<CONFIG:DEBUG>,/Od,/O1> /Zi /Fo ${CMAKE_BINARY_DIR}/${FILE_WE}.cso /Fd ${CMAKE_BINARY_DIR}/${FILE_WE}.pdb ${FILE}
+            COMMAND "${WINDOWS_KIT}/bin/${WINDOWS_SDK_VERSION}/${WINDOWS_ARCHITECTURE}/fxc.exe" /nologo /Emain /T${type}_${model} $<IF:$<CONFIG:DEBUG>,/Od,/O1> /Zi /Fo ${CMAKE_BINARY_DIR}/${FILE_WE}.cso /Fd ${CMAKE_BINARY_DIR}/${FILE_WE}.pdb ${FILE}
             MAIN_DEPENDENCY ${FILE}
             COMMENT "HLSL ${FILE}"
             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

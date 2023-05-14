@@ -42,8 +42,21 @@ Application::Application(HINSTANCE hInst, int nCmdShow): hInstance(hInst) {
     m_pRenderer = std::make_unique<Renderer>(m_pDeviceResources);
 }
 
+Application::Application(Application &&a) noexcept {
+    hInstance = a.hInstance;
+    a.hInstance = nullptr;
+}
+
+Application &Application::operator=(Application &&a) noexcept {
+    hInstance = a.hInstance;
+    a.hInstance = nullptr;
+    return *this;
+}
+
 Application::~Application() {
-    UnregisterClassW(m_windowClassName, hInstance);
+    if (hInstance){
+        UnregisterClassW(m_windowClassName, hInstance);
+    }
 }
 
 int Application::Run(){
@@ -66,4 +79,5 @@ int Application::Run(){
 LRESULT Application::InstanceWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     return DefWindowProcW(hWnd, message, wParam, lParam);
 }
+
 

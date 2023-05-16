@@ -117,7 +117,7 @@ Mesh Mesh::FromHeightStrip(const std::vector<DirectX::XMFLOAT2>& heights) {
     for (auto i = 0; i < heights.size(); i++){
         auto iPlusOne {(i + 1) % heights.size()};
         std::array<VertexPositionNormalColor, 4> vs;
-        float x = static_cast<float>(i);
+        auto x = static_cast<float>(i);
         vs[0].position = DirectX::XMFLOAT3{x, 0, heights[i].x};
         vs[1].position = DirectX::XMFLOAT3{x, 1, heights[i].y};
         vs[2].position = DirectX::XMFLOAT3{x + 1, 1, heights[iPlusOne].y};

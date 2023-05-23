@@ -23,11 +23,3 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     app = std::make_unique<Application>(hInstance, nCmdShow);
     return app->Run();
 }
-
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-    if (message == WM_DESTROY) {
-        PostQuitMessage(0);
-        return 0;
-    }
-    return app->InstanceWndProc(hWnd, message, wParam, lParam);
-}

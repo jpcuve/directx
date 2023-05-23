@@ -25,23 +25,6 @@ ApplicationWindow::ApplicationWindow(HINSTANCE hInstance, LPCWSTR windowClassNam
     if (!m_hwnd) throw std::runtime_error("Cannot create window");
 }
 
-ApplicationWindow::~ApplicationWindow() {
-    if (m_hwnd){
-        // do not do anything for a moved application window
-    }
-}
-
-ApplicationWindow::ApplicationWindow(ApplicationWindow &&that) noexcept {
-    m_hwnd = that.m_hwnd;
-    that.m_hwnd = nullptr;
-}
-
-ApplicationWindow &ApplicationWindow::operator=(ApplicationWindow &&that)  noexcept {
-    m_hwnd = that.m_hwnd;
-    that.m_hwnd = nullptr;
-    return *this;
-}
-
 LRESULT ApplicationWindow::wndProc(UINT message, WPARAM wParam, LPARAM lParam) {
     if (message == WM_DESTROY) {
         PostQuitMessage(0);

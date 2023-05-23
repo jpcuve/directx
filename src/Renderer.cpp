@@ -16,44 +16,44 @@ void Renderer::InitShaders() {
             vertexShaderData.data(),
             vertexShaderData.size(),
         nullptr, 
-        &m_pVertexShader));
+        &m_pVertexShader))
     D3D11_INPUT_ELEMENT_DESC inputElementDesc[] = { {
-        .SemanticName = "POSITION",
-        .SemanticIndex = 0,
-        .Format = DXGI_FORMAT_R32G32B32_FLOAT,
-        .InputSlot = 0,
-        .AlignedByteOffset = 0,
-        .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
-        .InstanceDataStepRate = 0,
+        "POSITION",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        0,
+        D3D11_INPUT_PER_VERTEX_DATA,
+        0,
     }, {
-        .SemanticName = "NORMAL",
-        .SemanticIndex = 0,
-        .Format = DXGI_FORMAT_R32G32B32_FLOAT,
-        .InputSlot = 0,
-        .AlignedByteOffset = 3 * sizeof(FLOAT),
-        .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
-        .InstanceDataStepRate = 0,
+        "NORMAL",
+        0,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        0,
+        3 * sizeof(FLOAT),
+        D3D11_INPUT_PER_VERTEX_DATA,
+        0,
     }, {
-        .SemanticName = "COLOR",
-        .SemanticIndex = 0,
-        .Format = DXGI_FORMAT_R8G8B8A8_UNORM,
-        .InputSlot = 0,
-        .AlignedByteOffset = 6 * sizeof(FLOAT),
-        .InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
-        .InstanceDataStepRate = 0,
+        "COLOR",
+        0,
+        DXGI_FORMAT_R8G8B8A8_UNORM,
+        0,
+        6 * sizeof(FLOAT),
+        D3D11_INPUT_PER_VERTEX_DATA,
+        0,
     } };
     THROW_IF_FAILED(device->CreateInputLayout(
         inputElementDesc, 
         ARRAYSIZE(inputElementDesc),
         vertexShaderData.data(),
         vertexShaderData.size(),
-        &m_pInputLayout));
+        &m_pInputLayout))
     auto pixelShaderData = LoadBinaryFile("CubePixelShader.cso");
     THROW_IF_FAILED(device->CreatePixelShader(
         pixelShaderData.data(),
         pixelShaderData.size(),
         nullptr,
-        &m_pPixelShader));
+        &m_pPixelShader))
 }
 
 void Renderer::InitBuffers() {  // a mesh
@@ -61,17 +61,17 @@ void Renderer::InitBuffers() {  // a mesh
     auto vertices = m_registry.Load();
     CD3D11_BUFFER_DESC verticesDesc(vertices.size() * sizeof(VertexPositionNormalColor), D3D11_BIND_VERTEX_BUFFER);
     D3D11_SUBRESOURCE_DATA verticesData{
-        .pSysMem = vertices.data(),
-        .SysMemPitch = 0,
-        .SysMemSlicePitch = 0,
+        vertices.data(),
+        0,
+        0,
     };
-    THROW_IF_FAILED(device->CreateBuffer(&verticesDesc, &verticesData, &m_pVertexBuffer));
+    THROW_IF_FAILED(device->CreateBuffer(&verticesDesc, &verticesData, &m_pVertexBuffer))
     
     CD3D11_BUFFER_DESC constantDesc(
         sizeof(ConstantData),
         D3D11_BIND_CONSTANT_BUFFER
     );
-    THROW_IF_FAILED(device->CreateBuffer(&constantDesc, nullptr, &m_pConstantBuffer));
+    THROW_IF_FAILED(device->CreateBuffer(&constantDesc, nullptr, &m_pConstantBuffer))
 }
 
 void Renderer::InitDeviceDependent() {
@@ -94,10 +94,10 @@ void Renderer::InitWindowSizeDependent(){
 
 void Renderer::Update() {
     m_frameCount++;
-    auto angle {static_cast<float>(m_frameCount % 2000) / 1000.0 * std::numbers::pi};
+    auto angle {static_cast<float>((m_frameCount % 2000) / 1000.0 * std::numbers::pi)};
     auto length {1.5f};
-    m_center.x = cos(angle) * length;
-    m_center.y = sin(angle) * length;
+    m_center.x = cosf(angle) * length;
+    m_center.y = sinf(angle) * length;
     if (m_frameCount == MAXUINT) {
         m_frameCount = 0;
     }
@@ -109,7 +109,7 @@ void Renderer::Render() {
     auto depthStencilView = m_pDeviceResources->GetDepthStencilView();
 
     // clear
-    float blue = static_cast<float>(abs(sin(static_cast<double>(m_frameCount) * 3.141592 / 100.0)));
+    auto blue {static_cast<float>(abs(sin(static_cast<double>(m_frameCount) * 3.141592 / 100.0)))};
     D3D11_VIDEO_COLOR_RGBA color{ 0.071f, 0.04f, blue, 1.0f };
     deviceContext->ClearRenderTargetView(renderTargetView, reinterpret_cast<float*>(&color));
     deviceContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

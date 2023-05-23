@@ -17,6 +17,8 @@ private:
 public:
     explicit ApplicationClass(HINSTANCE hInstance);
     ~ApplicationClass();
+    ApplicationClass(const ApplicationClass &that) = delete;
+    ApplicationClass &operator=(const ApplicationClass &that) = delete;
     ApplicationWindow &createWindow();
 };
 

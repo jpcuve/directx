@@ -14,7 +14,7 @@ public:
     ApplicationWindow(HINSTANCE hInstance, LPCWSTR windowClassName);
     ~ApplicationWindow();
     ApplicationWindow(const ApplicationWindow &that) = delete;
-    ApplicationWindow(ApplicationWindow &&that) noexcept ;
+    ApplicationWindow(ApplicationWindow &&that) noexcept;
     ApplicationWindow &operator=(const ApplicationWindow &that) = delete;
     ApplicationWindow &operator=(ApplicationWindow &&that) noexcept;
     HWND getHandle() { return m_hwnd; };

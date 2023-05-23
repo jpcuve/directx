@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "DeviceResources.h"
 #include "Renderer.h"
+#include "ApplicationClass.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -14,6 +15,7 @@ private:
 	LPCWSTR m_windowTitle {L"DirectX"};
 	int m_windowWidth {768};
 	int m_windowHeight {768};
+    std::unique_ptr<ApplicationClass> m_pApplicationClass;
     std::unique_ptr<DeviceResources> m_pDeviceResources;
     std::unique_ptr<Renderer> m_pRenderer;
 	// DeviceResources m_deviceResources;

@@ -22,15 +22,11 @@ ApplicationClass::ApplicationClass(HINSTANCE hInstance): m_hInstance(hInstance) 
             m_pClassName,
             nullptr,
     };
-    if (!RegisterClassExW(&wcex)) {
-        throw std::runtime_error("Cannot register window class");
-    }
+    if (!RegisterClassExW(&wcex)) throw std::runtime_error("Cannot register window class");
 }
 
 ApplicationClass::~ApplicationClass() {
-    if (m_hInstance){
-        UnregisterClassW(m_pClassName, m_hInstance);
-    }
+    if (m_hInstance) UnregisterClassW(m_pClassName, m_hInstance);
 }
 
 LRESULT ApplicationClass::ApplicationWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -42,6 +38,7 @@ LRESULT ApplicationClass::ApplicationWndProc(HWND hWnd, UINT message, WPARAM wPa
     return DefWindowProcW(hWnd, message, wParam, lParam);
 }
 
-void ApplicationClass::createWindow() {
+ApplicationWindow &ApplicationClass::createWindow() {
     m_windows.emplace_back(m_hInstance, m_pClassName);
+    return m_windows.back();
 }

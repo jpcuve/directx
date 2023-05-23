@@ -19,6 +19,8 @@ public:
     ApplicationWindow &operator=(ApplicationWindow &&that) noexcept;
     HWND getHandle() { return m_hwnd; };
     LRESULT wndProc(UINT message, WPARAM wParam, LPARAM lParam);
+    inline BOOL show(int nCmdShow){ return ShowWindow(m_hwnd, nCmdShow); }
+    inline BOOL update(){ return UpdateWindow(m_hwnd); }
 };
 
 

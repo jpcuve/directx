@@ -17,7 +17,7 @@ private:
 public:
     explicit ApplicationClass(HINSTANCE hInstance);
     ~ApplicationClass();
-    void createWindow();
+    ApplicationWindow &createWindow();
 };
 
 

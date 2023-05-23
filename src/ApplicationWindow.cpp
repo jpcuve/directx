@@ -22,9 +22,7 @@ ApplicationWindow::ApplicationWindow(HINSTANCE hInstance, LPCWSTR windowClassNam
             nullptr,
             hInstance,
             nullptr);
-    if (!m_hwnd) {
-        throw std::runtime_error("Cannot create window");
-    }
+    if (!m_hwnd) throw std::runtime_error("Cannot create window");
 }
 
 ApplicationWindow::~ApplicationWindow() {
@@ -45,5 +43,9 @@ ApplicationWindow &ApplicationWindow::operator=(ApplicationWindow &&that)  noexc
 }
 
 LRESULT ApplicationWindow::wndProc(UINT message, WPARAM wParam, LPARAM lParam) {
+    if (message == WM_DESTROY) {
+        PostQuitMessage(0);
+        return 0;
+    }
     return DefWindowProcW(m_hwnd, message, wParam, lParam);
 }

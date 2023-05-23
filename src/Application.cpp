@@ -2,6 +2,7 @@
 #include <stdexcept>
 
 Application::Application(HINSTANCE hInst, int nCmdShow): hInstance(hInst) {
+/*
     WNDCLASSEXW wcex {
             sizeof(WNDCLASSEXW),
             CS_HREDRAW | CS_VREDRAW,
@@ -16,9 +17,7 @@ Application::Application(HINSTANCE hInst, int nCmdShow): hInstance(hInst) {
             m_windowClassName,
             nullptr,
     };
-    if (!RegisterClassExW(&wcex)) {
-        throw std::runtime_error("Cannot register window class");
-    }
+    if (!RegisterClassExW(&wcex)) throw std::runtime_error("Cannot register window class");
     auto screenWidth = GetSystemMetrics(SM_CXSCREEN);
     auto screenHeight = GetSystemMetrics(SM_CYSCREEN);
     HWND hWnd = CreateWindowW(
@@ -33,12 +32,15 @@ Application::Application(HINSTANCE hInst, int nCmdShow): hInstance(hInst) {
             nullptr,
             hInstance,
             nullptr);
-    if (!hWnd) {
-        throw std::runtime_error("Cannot create window");
-    }
+    if (!hWnd) throw std::runtime_error("Cannot create window");
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
-    m_pDeviceResources = std::make_unique<DeviceResources>(hWnd);
+*/
+    m_pApplicationClass = std::make_unique<ApplicationClass>(hInst);
+    auto& w {m_pApplicationClass->createWindow()};
+    w.show(nCmdShow);
+    w.update();
+    m_pDeviceResources = std::make_unique<DeviceResources>(w.getHandle());
     m_pRenderer = std::make_unique<Renderer>(m_pDeviceResources);
 }
 
@@ -54,9 +56,7 @@ Application &Application::operator=(Application &&a) noexcept {
 }
 
 Application::~Application() {
-    if (hInstance){
-        UnregisterClassW(m_windowClassName, hInstance);
-    }
+    if (hInstance) UnregisterClassW(m_windowClassName, hInstance);
 }
 
 int Application::Run(){

@@ -25,7 +25,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     w.show(nCmdShow);
     w.update();
     DeviceResources deviceResources{w.getHandle()};
-    Renderer renderer {&deviceResources};
+    Renderer renderer {deviceResources};
 //    auto pDeviceResources = std::make_unique<DeviceResources>(w.getHandle());
     // auto pRenderer = std::make_unique<Renderer>(pDeviceResources);
     MSG msg;

@@ -31,8 +31,8 @@ MainWindowClass::~MainWindowClass() {
 
 LRESULT MainWindowClass::ApplicationWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     for (auto& window: m_windows){
-        if (window.getHandle() == hWnd){
-            return window.wndProc(message, wParam, lParam);
+        if (window.GetHandle() == hWnd){
+            return window.WndProc(message, wParam, lParam);
         }
     }
     return DefWindowProcW(hWnd, message, wParam, lParam);

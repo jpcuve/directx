@@ -16,10 +16,10 @@ private:
     std::unique_ptr<Renderer> m_pRenderer;
 public:
     MainWindow(HINSTANCE hInstance, LPCWSTR windowClassName);
-    HWND getHandle() { return m_hwnd; };
-    LRESULT wndProc(UINT message, WPARAM wParam, LPARAM lParam);
-    inline BOOL show(int nCmdShow){ return ShowWindow(m_hwnd, nCmdShow); }
-    inline BOOL update(){ return UpdateWindow(m_hwnd); }
+    HWND GetHandle() { return m_hwnd; };
+    LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+    inline BOOL Show(int nCmdShow){ return ShowWindow(m_hwnd, nCmdShow); }
+    inline BOOL Update(){ return UpdateWindow(m_hwnd); }
     void RenderFrame();
 };
 

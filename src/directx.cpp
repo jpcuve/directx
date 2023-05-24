@@ -2,8 +2,6 @@
 
 #include <memory>
 #include "MainWindowClass.h"
-#include "DeviceResources.h"
-#include "Renderer.h"
 #include "debug.h"
 #include "helper.h"
 
@@ -22,8 +20,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     dbg << std::flush;
     MainWindowClass applicationClass {hInstance};
     auto& window {applicationClass.createWindow()};
-    window.show(nCmdShow);
-    window.update();
+    window.Show(nCmdShow);
+    window.Update();
     MSG msg;
     auto done = false;
     while (!done) {

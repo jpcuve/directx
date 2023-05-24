@@ -27,7 +27,7 @@ MainWindow::MainWindow(HINSTANCE hInstance, LPCWSTR windowClassName) {
     m_pRenderer = std::make_unique<Renderer>(*m_pDeviceResources);
 }
 
-LRESULT MainWindow::wndProc(UINT message, WPARAM wParam, LPARAM lParam) {
+LRESULT MainWindow::WndProc(UINT message, WPARAM wParam, LPARAM lParam) {
     if (message == WM_DESTROY) {
         PostQuitMessage(0);
         return 0;

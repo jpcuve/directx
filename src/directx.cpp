@@ -1,13 +1,13 @@
 #include "directx.h"
 
 #include <memory>
-#include "Application.h"
+#include "ApplicationClass.h"
+#include "DeviceResources.h"
+#include "Renderer.h"
 #include "debug.h"
 #include "helper.h"
 
 DebugStream dbg;
-
-std::unique_ptr<Application> app;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                       _In_opt_ HINSTANCE hPrevInstance,
@@ -20,6 +20,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         dbg << i << " " << PositiveModulo(i, 3) << std::endl;
     }
     dbg << std::flush;
-    app = std::make_unique<Application>(hInstance, nCmdShow);
-    return app->Run();
+    ApplicationClass applicationClass {hInstance};
+    auto& w {applicationClass.createWindow()};
+    w.show(nCmdShow);
+    w.update();
+    auto pDeviceResources = std::make_unique<DeviceResources>(w.getHandle());
+    auto pRenderer = std::make_unique<Renderer>(pDeviceResources);
+    MSG msg;
+    auto done = false;
+    while (!done) {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        // render frame
+        pRenderer->Update();
+        pRenderer->Render();
+        pDeviceResources->Present();
+        done = msg.message == WM_QUIT;
+    }
+    return static_cast<int>(msg.wParam);
 }

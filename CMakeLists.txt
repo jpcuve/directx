@@ -43,8 +43,6 @@ add_executable(${PROJECT_NAME} WIN32
         src/debug.cpp
         src/directx.cpp
         src/directx.h
-        src/Application.cpp
-        src/Application.h
         src/DeviceResources.cpp
         src/DeviceResources.h
         src/Renderer.cpp

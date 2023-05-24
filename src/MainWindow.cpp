@@ -23,6 +23,8 @@ MainWindow::MainWindow(HINSTANCE hInstance, LPCWSTR windowClassName) {
             hInstance,
             nullptr);
     if (!m_hwnd) throw std::runtime_error("Cannot create window");
+    m_pDeviceResources = std::make_unique<DeviceResources>(m_hwnd);
+    m_pRenderer = std::make_unique<Renderer>(*m_pDeviceResources);
 }
 
 LRESULT MainWindow::wndProc(UINT message, WPARAM wParam, LPARAM lParam) {
@@ -31,4 +33,10 @@ LRESULT MainWindow::wndProc(UINT message, WPARAM wParam, LPARAM lParam) {
         return 0;
     }
     return DefWindowProcW(m_hwnd, message, wParam, lParam);
+}
+
+void MainWindow::RenderFrame() {
+    m_pRenderer->Update();
+    m_pRenderer->Render();
+    m_pDeviceResources->Present();
 }

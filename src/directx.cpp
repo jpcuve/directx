@@ -21,13 +21,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
     dbg << std::flush;
     MainWindowClass applicationClass {hInstance};
-    auto& w {applicationClass.createWindow()};
-    w.show(nCmdShow);
-    w.update();
-    DeviceResources deviceResources{w.getHandle()};
-    Renderer renderer {deviceResources};
-//    auto pDeviceResources = std::make_unique<DeviceResources>(w.getHandle());
-    // auto pRenderer = std::make_unique<Renderer>(pDeviceResources);
+    auto& window {applicationClass.createWindow()};
+    window.show(nCmdShow);
+    window.update();
     MSG msg;
     auto done = false;
     while (!done) {
@@ -35,10 +31,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        // render frame
-        renderer.Update();
-        renderer.Render();
-        deviceResources.Present();
+        window.RenderFrame();
         done = msg.message == WM_QUIT;
     }
     return static_cast<int>(msg.wParam);

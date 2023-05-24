@@ -1,7 +1,7 @@
 #include "directx.h"
 
 #include <memory>
-#include "ApplicationClass.h"
+#include "MainWindowClass.h"
 #include "DeviceResources.h"
 #include "Renderer.h"
 #include "debug.h"
@@ -20,7 +20,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         dbg << i << " " << PositiveModulo(i, 3) << std::endl;
     }
     dbg << std::flush;
-    ApplicationClass applicationClass {hInstance};
+    MainWindowClass applicationClass {hInstance};
     auto& w {applicationClass.createWindow()};
     w.show(nCmdShow);
     w.update();

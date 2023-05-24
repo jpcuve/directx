@@ -4,7 +4,7 @@
 #include "Mesh.h"
 #include "debug.h"
 
-Renderer::Renderer(const std::unique_ptr<DeviceResources>& dr) : m_pDeviceResources{dr} {
+Renderer::Renderer(DeviceResources *dr) : m_pDeviceResources{dr} {
     InitDeviceDependent();
     InitWindowSizeDependent();
 }

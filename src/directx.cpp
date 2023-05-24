@@ -24,8 +24,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     auto& w {applicationClass.createWindow()};
     w.show(nCmdShow);
     w.update();
-    auto pDeviceResources = std::make_unique<DeviceResources>(w.getHandle());
-    auto pRenderer = std::make_unique<Renderer>(pDeviceResources);
+    DeviceResources deviceResources{w.getHandle()};
+    Renderer renderer {&deviceResources};
+//    auto pDeviceResources = std::make_unique<DeviceResources>(w.getHandle());
+    // auto pRenderer = std::make_unique<Renderer>(pDeviceResources);
     MSG msg;
     auto done = false;
     while (!done) {
@@ -34,9 +36,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
         // render frame
-        pRenderer->Update();
-        pRenderer->Render();
-        pDeviceResources->Present();
+        renderer.Update();
+        renderer.Render();
+        deviceResources.Present();
         done = msg.message == WM_QUIT;
     }
     return static_cast<int>(msg.wParam);

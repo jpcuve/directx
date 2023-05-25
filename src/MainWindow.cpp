@@ -4,6 +4,7 @@
 
 #include "MainWindow.h"
 #include <stdexcept>
+#include "debug.h"
 
 MainWindow::MainWindow(HINSTANCE hInstance, LPCWSTR windowClassName) {
     auto screenWidth = GetSystemMetrics(SM_CXSCREEN);
@@ -28,9 +29,18 @@ MainWindow::MainWindow(HINSTANCE hInstance, LPCWSTR windowClassName) {
 }
 
 LRESULT MainWindow::WndProc(UINT message, WPARAM wParam, LPARAM lParam) {
-    if (message == WM_DESTROY) {
-        PostQuitMessage(0);
-        return 0;
+    switch(message) {
+        case WM_SIZE:{
+            auto width = LOWORD(lParam);
+            auto height = HIWORD(lParam);
+            dbg << "Window size " << width << " " << height << std::endl << std::flush;
+            break;
+        }
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+        default:
+            break;
     }
     return DefWindowProcW(m_hwnd, message, wParam, lParam);
 }

@@ -135,7 +135,6 @@ void Renderer::Render() {
 
     auto strips = m_registry.GetEntry(RegistryKey::PLAYGROUND);
     auto tileStart {static_cast<size_t>(k.x)};
-    dbg << "tile start: " << tileStart << std::endl << std::flush;
     auto offsetX { -m_center.x - static_cast<float>(m_registry.GetSurfaceExtent()) - static_cast<float>(m_registry.GetSurfaceExtent())};
     for (size_t i = 0; i < 2 * m_registry.GetSurfaceExtent() + 1; i++){
         auto strip = (k.y + i) % m_registry.GetPlaygroundEdge();
@@ -148,7 +147,7 @@ void Renderer::Render() {
         // auto tileStart {};
         deviceContext->Draw(tileCount * 6,  entry.start + 12);
     }
-    dbg << std::endl << std::flush;
+    // dbg << std::endl << std::flush;
     // set world before uploading constant data
 }
 

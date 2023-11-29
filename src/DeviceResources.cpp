@@ -105,7 +105,7 @@ void DeviceResources::SetUp() {
         1.0f,
     };
     m_pDeviceContext->RSSetViewports(1, &vp);
-    m_pDeviceContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), nullptr);
+    m_pDeviceContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
 }
 
 void DeviceResources::TearDown() {

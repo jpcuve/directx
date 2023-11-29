@@ -43,15 +43,13 @@ add_executable(${PROJECT_NAME} WIN32
         src/debug.cpp
         src/directx.cpp
         src/directx.h
-        src/Application.cpp
-        src/Application.h
         src/DeviceResources.cpp
         src/DeviceResources.h
         src/Renderer.cpp
         src/Renderer.h
         src/Timer.cpp
         src/Timer.h
-        src/StanfordParser.cpp src/StanfordParser.h src/helper.cpp src/Mesh.cpp src/Mesh.h src/OpenSimplexNoise.cpp src/OpenSimplexNoise.h src/Registry.cpp src/Registry.h src/ApplicationWindow.cpp src/ApplicationWindow.h src/ApplicationClass.cpp src/ApplicationClass.h)
+        src/StanfordParser.cpp src/StanfordParser.h src/helper.cpp src/Mesh.cpp src/Mesh.h src/OpenSimplexNoise.cpp src/OpenSimplexNoise.h src/Registry.cpp src/Registry.h src/MainWindow.cpp src/MainWindow.h src/MainWindowClass.cpp src/MainWindowClass.h)
 
 add_dependencies(${PROJECT_NAME} shaders)
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/stdafx.h)

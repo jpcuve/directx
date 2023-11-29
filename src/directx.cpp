@@ -1,13 +1,11 @@
 #include "directx.h"
 
 #include <memory>
-#include "Application.h"
+#include "MainWindowClass.h"
 #include "debug.h"
 #include "helper.h"
 
 DebugStream dbg;
-
-std::unique_ptr<Application> app;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                       _In_opt_ HINSTANCE hPrevInstance,
@@ -20,6 +18,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         dbg << i << " " << PositiveModulo(i, 3) << std::endl;
     }
     dbg << std::flush;
-    app = std::make_unique<Application>(hInstance, nCmdShow);
-    return app->Run();
+    MainWindowClass applicationClass {hInstance};
+    auto& window {applicationClass.createWindow()};
+    window.Show(nCmdShow);
+    window.Update();
+    MSG msg;
+    auto done = false;
+    while (!done) {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        window.RenderFrame();
+        done = msg.message == WM_QUIT;
+    }
+    return static_cast<int>(msg.wParam);
 }
